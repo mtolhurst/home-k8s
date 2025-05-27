@@ -1,0 +1,200 @@
+---
+# TODO prometheus monitoring
+# 
+# Create a postgres 15 db with pgvector extension
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-pg-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/mtolhurst/postgresql:15.3-pgvector@sha256:e9c502da08471b5cf1e48290c8624fdc8cee50a9aa370f83f5d357a2470ad00f
+  storage:
+    size: 20Gi
+  bootstrap:
+    initdb:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+
+---
+# PVC for immich data not in pg
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+  namespace: immich
+  labels:
+    app: immich
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: immich-pvc
+      containers:
+        - name: redis
+          image: docker.io/redis:6.2-alpine@sha256:eaba718fecd1196d88533de7ba49bf903ad33664a92debb24660a922ecd9cac8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: redis
+              containerPort: 6379
+        - name: machine-learning
+          image: ghcr.io/immich-app/immich-machine-learning:v1.124.2
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: data
+              mountPath: /cache
+              subPath: ml-cache/
+          ports:
+            - name: ml
+              containerPort: 3003
+          livenessProbe: &mlProbe
+            httpGet: 
+              port: "ml"
+              path: "/ping"
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          readinessProbe: *mlProbe
+          env: 
+            - name: IMMICH_PORT
+              value: "3003"
+            - name: IMMICH_MACHINE_LEARNING_URL
+              value: http://127.0.0.1:3003
+            - name: TZ
+              value: Australia/Sydney
+            - name: REDIS_HOSTNAME
+              value: 127.0.0.1
+            - name: REDIS_PORT
+              value: "6379"
+            - name: CPU_CORES
+              value: "2"
+            - name: DB_VECTOR_EXTENSION
+              value: pgvector
+            - name: DB_HOSTNAME
+              value: $(IMMICH_PG_CLUSTER_RW_SERVICE_HOST)
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app 
+                  key: password
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: port
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: dbname
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:v1.124.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 2283
+              protocol: TCP
+          livenessProbe: &serverProbe
+            httpGet: 
+              port: "http"
+              path: "/api/server/ping"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 5
+          readinessProbe: *serverProbe
+          volumeMounts:
+            - name: data
+              mountPath: /usr/src/app/upload
+              subPath: uploads/
+          env: 
+            - name: IMMICH_LOG_LEVEL
+              value: verbose
+            - name: IMMICH_PORT
+              value: "2283"
+            - name: IMMICH_HOST
+              value: "0.0.0.0"
+            - name: IMMICH_MACHINE_LEARNING_URL
+              value: http://127.0.0.1:3003
+            - name: TZ
+              value: Australia/Sydney
+            - name: REDIS_HOSTNAME
+              value: 127.0.0.1
+            - name: REDIS_PORT
+              value: "6379"
+            - name: CPU_CORES
+              value: "2"
+            - name: DB_VECTOR_EXTENSION
+              value: pgvector
+            - name: DB_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: password
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: port
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-pg-cluster-app
+                  key: dbname
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: immich
+  sessionAffinity: None
+  type: LoadBalancer
+
