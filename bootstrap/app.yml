@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: parent-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    name: parent-app
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:mtolhurst/home-k8s.git
+    targetRevision: HEAD
+    path: parent
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: parent-app
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
