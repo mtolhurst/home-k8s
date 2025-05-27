@@ -7,8 +7,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io 
 spec:
   ignoreDifferences:
-    - group: v1
-      kind: Service
+    - kind: Service
       name: longhorn-frontend
       jsonPointers:
         - /spec/ports
