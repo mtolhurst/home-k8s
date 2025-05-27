@@ -4,24 +4,27 @@ metadata:
   name: metallb
   namespace: metallb
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io 
 spec:
   syncPolicy:
     syncOptions:
-	- CreateNamespace=true
+      - CreateNamespace=true
     managedNamespaceMetadata:
-	  labels:
+      labels:
         kubernetes.io/metadata.name: metallb-system
         pod-security.kubernetes.io/audit: privileged
         pod-security.kubernetes.io/enforce: privileged
         pod-security.kubernetes.io/enforce-version: latest
         pod-security.kubernetes.io/warn: privileged
-
   destination:
     namespace: metallb
     server: {{ .Values.spec.destination.server }}
   project: default
-  source:
-    path: 
-    repoURL: https://github.com/argoproj/argocd-example-apps
-    targetRevision: HEAD
+  sources:
+    - chart: metallb
+      repoURL: https://metallb.github.io/metallb
+      valuesObject:
+        speaker:
+          ignoreExcludeLB: true
+    - repoURL: git@github.com:mtolhurst/home-k8s.git
+      path: infra/metallb
