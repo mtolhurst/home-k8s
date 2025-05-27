@@ -23,7 +23,7 @@ spec:
   sources:
     - chart: metallb
       repoURL: https://metallb.github.io/metallb
-      targetRevision: latest
+      targetRevision: 0.14.9
       valuesObject:
         speaker:
           ignoreExcludeLB: true
