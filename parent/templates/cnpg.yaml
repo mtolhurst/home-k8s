@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cnpg
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: cnpg-system
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: cloudnative-pg
+      repoURL: https://cloudnative-pg.github.io/charts
+      targetRevision: 0.24.0
