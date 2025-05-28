@@ -56,7 +56,7 @@ spec:
         - name: APP_ENV
           value: "local"
         - name: APP_KEY
-          value: "test-key" # TODO change this
+          value: "9dJV971LPRhHwsnmzxgOocQVKh1EaTVb" # TODO change this
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
