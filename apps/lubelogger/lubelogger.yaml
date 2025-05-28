@@ -17,7 +17,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lube-logger
-  namespace: lube-logger
+  namespace: lubelogger
   labels:
     app: lube-logger
 spec:
