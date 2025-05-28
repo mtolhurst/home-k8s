@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wanderer
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: wanderer
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - repoURL: git@github.com:mtolhurst/home-k8s.git
+      path: apps/wanderer
