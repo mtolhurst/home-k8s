@@ -1,4 +1,6 @@
 spec:
   destination:
     server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/mtolhurst/home-k8s.git
 

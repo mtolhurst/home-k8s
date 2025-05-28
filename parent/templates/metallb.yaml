@@ -43,5 +43,5 @@ spec:
         valuesObject:
           speaker:
             ignoreExcludeLB: true
-    - repoURL: git@github.com:mtolhurst/home-k8s.git
+    - repoURL: {{ .Values.spec.source.repoURL }}
       path: infra/metallb

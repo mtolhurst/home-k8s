@@ -18,5 +18,5 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
-    - repoURL: git@github.com:mtolhurst/home-k8s.git
+    - repoURL: {{ .Values.spec.source.repoURL }}
       path: apps/mealie

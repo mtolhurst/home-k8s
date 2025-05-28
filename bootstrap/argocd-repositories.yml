@@ -6,4 +6,4 @@ metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  url: git@github.com:mtolhurst/home-k8s.git
+  url: https://github.com/mtolhurst/home-k8s.git
