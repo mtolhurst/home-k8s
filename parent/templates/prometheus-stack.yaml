@@ -23,9 +23,20 @@ spec:
       targetRevision: 72.6.3
       helm:
         valuesObject:
-          alertmanager:
+          global:
+            rbac:
+              pspEnabled: false
+          kube-state-metrics:
+            podSecurityPolicy:
+              enabled: false
+          prometheus-node-exporter:
+            rbac:
+              pspEnabled: false
+          grafana:
             service:
               type: LoadBalancer
-          grafana:
+            rbac:
+              pspEnabled: false
+          alertmanager:
             service:
               type: LoadBalancer
