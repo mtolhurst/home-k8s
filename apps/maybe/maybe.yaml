@@ -72,7 +72,7 @@ spec:
               name: maybe-pg-cluster-app
               key: password
         - name: DB_PORT
-          value: 5432
+          value: "5432"
         - name: SECRET_KEY_BASE
           value: a7523c3d0ae56415046ad8abae168d71074a79534a7062258f8d1d51ac2f76d3c3bc86d86b6b0b307df30d9a6a90a2066a3fa9e67c5e6f374dbd7dd4e0778e13
         - name: SELF_HOSTED
