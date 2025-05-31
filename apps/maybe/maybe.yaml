@@ -88,7 +88,7 @@ spec:
           name: http
         volumeMounts:
         - mountPath: "/rails/storage"
-          name: maybe-rails-storage
+          name: maybe-volume
         imagePullPolicy: Always
       - name: worker
         image: ghcr.io/maybe-finance/maybe:latest
