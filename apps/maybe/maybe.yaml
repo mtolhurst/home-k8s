@@ -93,7 +93,9 @@ spec:
       - name: worker
         image: ghcr.io/maybe-finance/maybe:latest
         command:
-          - bundle exec sidekiq
+          - bundle
+          - exec
+          - sidekiq
         env: *env
       - name: redis
         image: redis:latest
