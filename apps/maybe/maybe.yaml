@@ -92,7 +92,8 @@ spec:
         imagePullPolicy: Always
       - name: worker
         image: ghcr.io/maybe-finance/maybe:latest
-        command: bundle exec sidekiq
+        command:
+          - bundle exec sidekiq
         env: *env
       - name: redis
         image: redis:latest
