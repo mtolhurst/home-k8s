@@ -76,11 +76,11 @@ spec:
         - name: SECRET_KEY_BASE
           value: a7523c3d0ae56415046ad8abae168d71074a79534a7062258f8d1d51ac2f76d3c3bc86d86b6b0b307df30d9a6a90a2066a3fa9e67c5e6f374dbd7dd4e0778e13
         - name: SELF_HOSTED
-          value: true
+          value: "true"
         - name: RAILS_FORCE_SSL
-          value: true
+          value: "true"
         - name: RAILS_ASSUME_SSL
-          value: true
+          value: "true"
         - name: REDIS_URL
           value: redis://127.0.0.1:6379/1
         ports:
