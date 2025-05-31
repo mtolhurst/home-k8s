@@ -12,9 +12,7 @@ spec:
       targetPort: http
   selector:
     app: maybe
-
 ---
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -27,9 +25,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -82,13 +78,14 @@ spec:
         - name: RAILS_ASSUME_SSL
           value: "false"
         - name: REDIS_URL
-          value: redis://127.0.0.1:6379/1
+          value: redis://localhost:6379/1
         ports:
         - containerPort: 3000
           name: http
         volumeMounts:
         - mountPath: "/rails/storage"
           name: maybe-volume
+          subPath: rails/
         imagePullPolicy: Always
       - name: worker
         image: ghcr.io/maybe-finance/maybe:latest
@@ -99,6 +96,10 @@ spec:
         env: *env
       - name: redis
         image: redis:latest
+        volumeMounts:
+        - mountPath: "/data"
+          name: redis-vol
+          subPath: redis/
       volumes:
         - name: maybe-volume
           persistentVolumeClaim:
