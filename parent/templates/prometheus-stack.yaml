@@ -7,6 +7,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io 
 spec:
   syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        kubernetes.io/metadata.name: monitoring
+        pod-security.kubernetes.io/enforce: privileged
     syncOptions:
       - CreateNamespace=true
     automated: 
@@ -23,20 +27,9 @@ spec:
       targetRevision: 72.6.3
       helm:
         valuesObject:
-          global:
-            rbac:
-              pspEnabled: false
-          kube-state-metrics:
-            podSecurityPolicy:
-              enabled: false
-          prometheus-node-exporter:
-            rbac:
-              pspEnabled: false
           grafana:
             service:
               type: LoadBalancer
-            rbac:
-              pspEnabled: false
           alertmanager:
             service:
               type: LoadBalancer
