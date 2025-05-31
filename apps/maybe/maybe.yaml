@@ -98,7 +98,7 @@ spec:
         image: redis:latest
         volumeMounts:
         - mountPath: "/data"
-          name: redis-vol
+          name: maybe-volume
           subPath: redis/
       volumes:
         - name: maybe-volume
