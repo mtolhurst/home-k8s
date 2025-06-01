@@ -113,3 +113,23 @@ spec:
   instances: 1
   storage:
     size: 10Gi
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://tolhurst-cnpg-backup/maybe-finance
+      s3Credentials:
+        accessKeyId:
+          name: pg-backup-aws-creds
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: pg-backup-aws-creds
+          key: ACCESS_SECRET_KEY
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: maybe-backup-daily
+spec:
+  schedule: "0 0 0 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: maybe-pg-cluster
