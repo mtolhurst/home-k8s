@@ -25,4 +25,5 @@ spec:
         valuesObject:
           service:
             type: LoadBalancer
+            port: 80
           
