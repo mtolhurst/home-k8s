@@ -17,7 +17,7 @@ metadata:
   name: bumper-nginx
   namespace: bumper
   labels:
-    app: bumper-nginx
+    app: bumperNginx
 spec:
   strategy:
     type: Recreate
@@ -135,7 +135,7 @@ spec:
       targetPort: port4
       name: port4
   selector:
-    app: bumper-nginx
+    app: bumperNginx
   type: LoadBalancer
 ---
 # Service
