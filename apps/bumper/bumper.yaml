@@ -1,0 +1,98 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bumper-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bumper
+  namespace: bumper
+  labels:
+    app: bumper
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bumper
+  template:
+    metadata:
+      labels:
+        app: bumper
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: bumper-pvc
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - name: "443"
+              containerPort: 443
+            - name: "5223"  
+              containerPort: 5223
+            - name: "8007"  
+              containerPort: 8007
+            - name: "8883"  
+              containerPort: 8883
+          volumeMounts:
+            - name: nginx-configmap-vol
+              mountPath: /etc/nginx
+              readOnly: true
+        - name: bumper
+          image: bmartin5692/bumper
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Australia/Sydney
+            - name: BUMPER_ANNOUNCE_IP
+              value: bumper.home
+            - name: BUMPER_LISTEN
+              value: 0.0.0.0
+            - name: LOG_TO_STDOUT
+              value: "true"
+          volumeMounts:
+            - name: data
+              mountPath: /bumper/data
+              subPath: data
+            - name: data
+              mountPath: /bumper/certs
+              subpath: certs
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bumper
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: "443"
+    - port: 5223
+      protocol: TCP
+      targetPort: "5223"
+    - port: 8007
+      protocol: TCP
+      targetPort: "8007"
+    - port: 8883
+      protocol: TCP
+      targetPort: "8883"
+  selector:
+    app: bumper
+  type: LoadBalancer
+
