@@ -24,7 +24,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bumper
+      app: bumper-nginx
   template:
     metadata:
       labels:
@@ -81,6 +81,15 @@ spec:
       containers:
         - name: bumper
           image: bmartin5692/bumper
+          ports:
+            - name: port1
+              containerPort: 443
+            - name: port2  
+              containerPort: 5223
+            - name: port3  
+              containerPort: 8007
+            - name: port4  
+              containerPort: 8883
           env:
             - name: PUID
               value: "1000"
@@ -126,9 +135,35 @@ spec:
       targetPort: port4
       name: port4
   selector:
-    app: bumper
+    app: bumper-nginx
   type: LoadBalancer
-
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bumper
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: port1
+      name: port1
+    - port: 5223
+      protocol: TCP
+      targetPort: port2
+      name: port2
+    - port: 8007
+      protocol: TCP
+      targetPort: port3
+      name: port3
+    - port: 8883
+      protocol: TCP
+      targetPort: port4
+      name: port4
+  selector:
+    app: bumper
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: ConfigMap
