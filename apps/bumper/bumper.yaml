@@ -44,13 +44,13 @@ spec:
         - name: nginx
           image: nginx:alpine
           ports:
-            - name: "443"
+            - name: port1
               containerPort: 443
-            - name: "5223"  
+            - name: port2  
               containerPort: 5223
-            - name: "8007"  
+            - name: port3  
               containerPort: 8007
-            - name: "8883"  
+            - name: port4  
               containerPort: 8883
           volumeMounts:
             - name: nginx-configmap-vol
@@ -88,16 +88,16 @@ spec:
   ports:
     - port: 443
       protocol: TCP
-      targetPort: "443"
+      targetPort: port1
     - port: 5223
       protocol: TCP
-      targetPort: "5223"
+      targetPort: port2
     - port: 8007
       protocol: TCP
-      targetPort: "8007"
+      targetPort: port3
     - port: 8883
       protocol: TCP
-      targetPort: "8883"
+      targetPort: port4
   selector:
     app: bumper
   type: LoadBalancer
