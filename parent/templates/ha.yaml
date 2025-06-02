@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: home-assistant
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: home-assistant
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: home-assistant
+      repoURL: http://pajikos.github.io/home-assistant-helm-chart/
+      targetRevision: 0.3.4
+      helm:
+        valuesObject:
+          service:
+            type: LoadBalancer
+          
