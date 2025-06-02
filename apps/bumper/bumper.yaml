@@ -34,6 +34,12 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: bumper-pvc
+        - name: nginx-configmap-vol
+          configMap:
+            name: nginx-conf
+            items:
+              - key: config
+                path: nginx.conf
       containers:
         - name: nginx
           image: nginx:alpine
@@ -96,3 +102,51 @@ spec:
     app: bumper
   type: LoadBalancer
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  config: |
+    error_log stderr;
+    pid /var/run/nginx.pid;
+
+    events { }
+
+    stream {
+            resolver 127.0.0.11 ipv6=off; #docker dns server
+            map_hash_bucket_size 64;
+
+            map $ssl_preread_server_name $internalport {
+                    # redirect all requests, which contain "mq" in the SNI -> MQTT
+                    ~^.*(mq).*\.eco(vacs|user)\.(net|com)$    8883;
+
+                    # the rest of eco(user|vacs) requests
+                    ~^.*eco(vacs|user)\.(net|com)$          443;
+
+                    # mapping default to MQTT as the bots are connecting directly to the ip without SNI
+                    default                                   8883;
+            }
+
+            server {
+                    listen 443;
+                    ssl_preread  on;
+                    proxy_pass bumper:$internalport;
+            }
+
+            server {
+                    listen 5223;
+                    proxy_pass bumper:5223;
+            }
+
+            server {
+                    listen 8007;
+                    proxy_pass bumper:8007;
+            }
+
+            server {
+                    listen 8883;
+                    proxy_pass bumper:8883;
+            }
+    }
