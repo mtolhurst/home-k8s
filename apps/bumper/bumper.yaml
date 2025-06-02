@@ -14,10 +14,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bumper
+  name: bumper-nginx
   namespace: bumper
   labels:
-    app: bumper
+    app: bumper-nginx
 spec:
   strategy:
     type: Recreate
@@ -31,9 +31,6 @@ spec:
         app: bumper
     spec:
       volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: bumper-pvc
         - name: nginx-configmap-vol
           configMap:
             name: nginx-conf
@@ -56,6 +53,32 @@ spec:
             - name: nginx-configmap-vol
               mountPath: /etc/nginx
               readOnly: true
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bumper
+  namespace: bumper
+  labels:
+    app: bumper
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bumper
+  template:
+    metadata:
+      labels:
+        app: bumper
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: bumper-pvc
+      containers:
         - name: bumper
           image: bmartin5692/bumper
           env:
@@ -83,7 +106,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bumper
+  name: bumper-nginx
 spec:
   ports:
     - port: 443
