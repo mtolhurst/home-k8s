@@ -89,15 +89,19 @@ spec:
     - port: 443
       protocol: TCP
       targetPort: port1
+      name: port1
     - port: 5223
       protocol: TCP
       targetPort: port2
+      name: port2
     - port: 8007
       protocol: TCP
       targetPort: port3
+      name: port3
     - port: 8883
       protocol: TCP
       targetPort: port4
+      name: port4
   selector:
     app: bumper
   type: LoadBalancer
