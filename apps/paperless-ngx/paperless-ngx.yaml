@@ -107,14 +107,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: paperless
+  name: paperless-ngx
 spec:
   ports:
-    - port: 8000
+    - port: 80
       protocol: TCP
       targetPort: http
   selector:
-    app: paperless
+    app: paperless-ngx
   sessionAffinity: None
   type: LoadBalancer
 
