@@ -72,6 +72,8 @@ spec:
           env: 
             - name: PAPERLESS_REDIS
               value: redis://127.0.0.1:6379
+            - name: PAPERLESS_PORT
+              value: "8000"
             - name: PAPERLESS_URL
               value: http://paperless.home
             - name: PAPERLESS_DBHOST
