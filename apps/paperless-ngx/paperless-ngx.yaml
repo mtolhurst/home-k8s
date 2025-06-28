@@ -73,7 +73,7 @@ spec:
             - name: PAPERLESS_REDIS
               value: redis://127.0.0.1:6379
             - name: PAPERLESS_URL
-              value: 10.2.16.11
+              value: http://paperless.home
             - name: PAPERLESS_DBHOST
               valueFrom:
                 secretKeyRef:
