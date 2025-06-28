@@ -1,0 +1,119 @@
+---
+# TODO prometheus monitoring
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: paperless-pg-cluster
+spec:
+  instances: 1
+  storage:
+    size: 20Gi
+---
+# PVC for data not in pg
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-ngx
+  namespace: paperless-ngx
+  labels:
+    app: paperless-ngx
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paperless-ngx
+  template:
+    metadata:
+      labels:
+        app: paperless-ngx
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: paperless-pvc
+      containers:
+        - name: broker
+          image: docker.io/library/redis:8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: redis
+              containerPort: 6379
+        - name: webserver
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /usr/src/paperless/data
+              subPath: data/
+            - name: data
+              mountPath: /usr/src/paperless/media
+              subPath: media/
+            - name: data
+              mountPath: /usr/src/paperless/export
+              subPath: export/
+            - name: data
+              mountPath: /usr/src/paperless/consume
+              subPath: consume/
+          env: 
+            - name: PAPERLESS_REDIS
+              value: redis://127.0.0.1:6379
+            - name: PAPERLESS_DBHOST
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-pg-cluster-app
+                  key: host
+            - name: PAPERLESS_DBUSER
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-pg-cluster-app
+                  key: username
+            - name: PAPERLESS_DBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-pg-cluster-app
+                  key: password
+            - name: PAPERLESS_DBPORT
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-pg-cluster-app
+                  key: port
+            - name: PAPERLESS_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-pg-cluster-app
+                  key: dbname
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: paperless
+  sessionAffinity: None
+  type: LoadBalancer
+
