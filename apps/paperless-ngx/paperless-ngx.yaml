@@ -74,6 +74,8 @@ spec:
               value: redis://127.0.0.1:6379
             - name: PAPERLESS_BIND_ADDR
               value: 0.0.0.0
+            - name: PAPERLESS_PORT
+              value: "8000"
             - name: PAPERLESS_DBHOST
               valueFrom:
                 secretKeyRef:
