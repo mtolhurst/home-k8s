@@ -110,7 +110,7 @@ metadata:
   name: paperless
 spec:
   ports:
-    - port: 80
+    - port: 8000
       protocol: TCP
       targetPort: http
   selector:
