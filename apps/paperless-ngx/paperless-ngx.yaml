@@ -49,9 +49,6 @@ spec:
         - name: broker
           image: docker.io/library/redis:8
           imagePullPolicy: IfNotPresent
-          ports:
-            - name: redis
-              containerPort: 6379
         - name: webserver
           image: ghcr.io/paperless-ngx/paperless-ngx:latest
           imagePullPolicy: IfNotPresent
@@ -75,6 +72,8 @@ spec:
           env: 
             - name: PAPERLESS_REDIS
               value: redis://127.0.0.1:6379
+            - name: PAPERLESS_PORT
+              value: "8000"
             - name: PAPERLESS_DBHOST
               valueFrom:
                 secretKeyRef:
