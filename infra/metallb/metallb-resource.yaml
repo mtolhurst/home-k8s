@@ -9,13 +9,19 @@ spec:
   - "10.2.16.1-10.2.16.255"
 
 ---
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
 metadata:
-  name: metallb-announcement
+  name: opnsense
   namespace: metallb-system
 spec:
-  ipAddressPools:
-    - first-pool
+  myASN: 64500
+  peerASN: 65551
+  peerAddress: 192.168.1.1
 
-
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: bgp-advertisement
+  namespace: metallb-system
