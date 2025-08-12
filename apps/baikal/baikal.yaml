@@ -34,6 +34,7 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: baikal-pvc
+      # TODO pg db
       containers:
         - name: baikal
           image: ckulka/baikal:nginx
