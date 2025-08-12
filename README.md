@@ -2,6 +2,15 @@
 
 ## Bootstrapping
 
+In the `bootstrap` subdirectory, execute the bootstrap script.
+
+## Networking
+
+Apps are exposed using metallb, running in BGP mode.
+The BGP peering is setup in ./infra/metallb/metallb-resource.yaml
+
+In my case, this is configured to use an opnsense router with the frr plugin.
+
 ## App of apps pattern
 
 https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/#app-of-apps-pattern

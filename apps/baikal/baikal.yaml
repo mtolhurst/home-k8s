@@ -41,10 +41,10 @@ spec:
             - name: http
               containerPort: 80
           volumeMounts:
-            - name: config
+            - name: data
               mountPath: /var/www/baikal/config
               subPath: config
-            - name: specific
+            - name: data
               mountPath: /var/www/baikal/Specific
               subpath: specific
 ---
