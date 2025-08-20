@@ -6,7 +6,9 @@
 version: 2
 updates:
   - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/apps/**" # Location of package manifests
+    directories: 
+      - "/apps/**/*.yaml"
+      - "/apps/**/*.yml"
     schedule:
       interval: "daily"
 
