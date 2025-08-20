@@ -41,6 +41,9 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          env:
+            - name: APPLY_HOME_ASSISTANT_FIX
+              value: 'true'
           volumeMounts:
             - name: data
               mountPath: /var/www/baikal/config
