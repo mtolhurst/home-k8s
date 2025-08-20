@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: radicale-pvc
+  name: baikal-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -14,41 +14,46 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: radicale
-  namespace: radicale
+  name: baikal
+  namespace: baikal
   labels:
-    app: radicale
+    app: baikal
 spec:
   strategy:
     type: Recreate
   replicas: 1
   selector:
     matchLabels:
-      app: radicale
+      app: baikal
   template:
     metadata:
       labels:
-        app: radicale
+        app: baikal
     spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: radicale-pvc
+            claimName: baikal-pvc
+      # TODO pg db
       containers:
-        - name: radicale
-          image: tomsquest/docker-radicale
+        - name: baikal
+          image: ckulka/baikal:nginx
           ports:
             - name: http
-              containerPort: 5232
+              containerPort: 80
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /var/www/baikal/config
+              subPath: config
+            - name: data
+              mountPath: /var/www/baikal/Specific
+              subpath: specific
 ---
 # Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: radicale
+  name: baikal
 spec:
   ports:
     - port: 80
@@ -56,5 +61,5 @@ spec:
       targetPort: http
       name: http
   selector:
-    app: radicale
+    app: baikal
   type: LoadBalancer
