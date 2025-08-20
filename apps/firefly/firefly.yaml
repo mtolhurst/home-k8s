@@ -50,7 +50,7 @@ spec:
         app: firefly
     spec:
       containers:
-      - image: fireflyiii/core:version-6.2.12
+      - image: fireflyiii/core:version-6.3.2
         name: firefly-iii
         env:
         - name: APP_ENV
