@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: baikal
+  name: radicale
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io 
@@ -14,9 +14,9 @@ spec:
       selfHeal: true
       allowEmpty: false 
   destination:
-    namespace: baikal
+    namespace: radicale
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
     - repoURL: {{ .Values.spec.source.repoURL }}
-      path: apps/baikal
+      path: apps/radicale
