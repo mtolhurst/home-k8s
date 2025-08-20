@@ -7,8 +7,7 @@ version: 2
 updates:
   - package-ecosystem: "docker" # See documentation for possible values
     directories: 
-      - "apps/*/*.yaml"
-      - "apps/*/*.yml"
+      - "apps/*"
     schedule:
       interval: "daily"
 
