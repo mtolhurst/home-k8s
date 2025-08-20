@@ -9,7 +9,4 @@ updates:
     directory: "/apps" # Location of package manifests
     schedule:
       interval: "daily"
-  - package-ecosystem: "helm"
-    directory: /parent/templates
-    schedule:
-      interval: "daily"
+
