@@ -47,7 +47,7 @@ spec:
             claimName: paperless-pvc
       containers:
         - name: broker
-          image: docker.io/library/redis:8
+          image: redis:8.2.1-alpine
           imagePullPolicy: IfNotPresent
         - name: webserver
           image: ghcr.io/paperless-ngx/paperless-ngx:latest

@@ -95,7 +95,7 @@ spec:
           - sidekiq
         env: *env
       - name: redis
-        image: redis:latest
+        image: redis:8.2.1-alpine
         volumeMounts:
         - mountPath: "/data"
           name: maybe-volume
