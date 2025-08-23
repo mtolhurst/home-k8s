@@ -39,7 +39,7 @@ spec:
                 path: nginx.conf
       containers:
         - name: nginx
-          image: nginx:alpine
+          image: nginx:1.29.1-alpine
           ports:
             - name: port1
               containerPort: 443
@@ -80,7 +80,7 @@ spec:
             claimName: bumper-pvc
       containers:
         - name: bumper
-          image: bmartin5692/bumper
+          image: bmartin5692/bumper:latest # no versioned tags available
           ports:
             - name: port1
               containerPort: 443

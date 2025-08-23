@@ -46,7 +46,7 @@ spec:
             claimName: lubelogger-pvc
       containers:
         - name: lubelogger
-          image: ghcr.io/hargata/lubelogger
+          image: ghcr.io/hargata/lubelogger:v1.5.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
