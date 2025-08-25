@@ -90,6 +90,10 @@ spec:
                   key: password
             - name: SECRET_KEY
               value: 3f2756e02a90592b8a77567fe511815257606eec5df6b9d65bfc0eb042e14dcc92118b387f7acf10602b637f220bf6ebaf06fbb01eef263b3302b50e5e70ae7c
+            - name: DEFAULT_ADMIN_EMAIL
+              value: admin@gffo.xyz
+            - name: DEFAULT_ADMIN_PASSWORD
+              value: admin
 
 ---
 # Service
