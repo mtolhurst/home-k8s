@@ -1,0 +1,109 @@
+# PVC for attachments, and static assets
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: planka-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+# Create a postgres db
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: planka-pg-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  storage:
+    size: 10Gi
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planka
+  namespace: planka
+  labels:
+    app: planka
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: planka
+  template:
+    metadata:
+      labels:
+        app: planka
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: planka-pvc
+      containers:
+        - name: planka
+          image: ghcr.io/plankanban/planka:2.0.0-rc.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 1337
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: "http"
+              path: "/"
+          readinessProbe:
+            httpGet:
+              port: "http"
+              path: "/"
+          volumeMounts:
+            - name: data
+              mountPath: /app/public/favicons
+              subPath: favicons
+            - name: data
+              mountPath: /app/public/user-avatars
+              subPath: user-avatars
+            - name: data
+              mountPath: /app/public/background-images
+              subPath: background-images
+            - name: data
+              mountPath: /app/private/attachments
+              subPath: attachments
+          env:
+            - name: BASE_URL
+              value: http://planka.home
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: planka-pg-cluster-app
+                  key: uri
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: planka-pg-cluster-app
+                  key: password
+            - name: SECRET_KEY
+              value: 3f2756e02a90592b8a77567fe511815257606eec5df6b9d65bfc0eb042e14dcc92118b387f7acf10602b637f220bf6ebaf06fbb01eef263b3302b50e5e70ae7c
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: planka
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: planka
+  sessionAffinity: None
+  type: LoadBalancer
+
