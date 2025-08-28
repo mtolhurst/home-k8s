@@ -94,6 +94,10 @@ spec:
               value: admin@gffo.xyz
             - name: DEFAULT_ADMIN_PASSWORD
               value: admin
+            - name: DEFAULT_ADMIN_NAME
+              value: admin
+            - name: DEFAULT_ADMIN_USERNAME
+              value: admin
 
 ---
 # Service
