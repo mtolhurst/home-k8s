@@ -65,7 +65,7 @@ spec:
             - name: config
               mountPath: /config
             - name: tmp
-              mountpath: /intermediate
+              mountPath: /intermediate
             # TODO mounts for dl client out
 ---
 # Service
