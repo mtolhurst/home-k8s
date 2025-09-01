@@ -19,6 +19,7 @@ spec:
 
 ---
 # PVC for immich data not in pg
+# TODO replace this with NFS
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

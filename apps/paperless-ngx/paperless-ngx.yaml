@@ -10,6 +10,7 @@ spec:
     size: 20Gi
 ---
 # PVC for data not in pg
+# TODO replace with nfs
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
