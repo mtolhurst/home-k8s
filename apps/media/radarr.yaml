@@ -34,6 +34,13 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: radarr-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: media-tmp-pvc
       containers:
         - name: radarr
           image: lscr.io/linuxserver/radarr:5.26.2
@@ -50,7 +57,11 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /config
-            # TODO mounts for dl client and media lib
+            - name: media
+              value: /media
+            - name: tmp
+              value: /downloads
+              subPath: /complete
 ---
 # Service
 apiVersion: v1

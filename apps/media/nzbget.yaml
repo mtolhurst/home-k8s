@@ -10,18 +10,6 @@ spec:
     requests:
       storage: 50Mi
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nzbget-tmp-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn-no-replica
-  resources:
-    requests:
-      storage: 50Gi
----
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -48,7 +36,7 @@ spec:
             claimName: nzbget-config-pvc
         - name: tmp
           persistentVolumeClaim:
-            claimName: nzbget-tmp-pvc
+            claimName: media-tmp-pvc
       containers:
         - name: nzbget
           image: lscr.io/linuxserver/nzbget:25.2.20250822
@@ -67,7 +55,10 @@ spec:
               mountPath: /config
             - name: tmp
               mountPath: /intermediate
-            # TODO mounts for dl client out
+              subPath: /intermediate
+            - name: tmp
+              mountPath: /complete
+              subPath: /complete
 ---
 # Service
 apiVersion: v1

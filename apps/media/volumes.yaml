@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-tmp-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-no-replica
+  resources:
+    requests:
+      storage: 50Gi
