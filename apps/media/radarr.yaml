@@ -8,7 +8,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Mi
+      storage: 50Mi
 ---
 # Deployment
 apiVersion: apps/v1
@@ -38,6 +38,7 @@ spec:
           nfs:
             server: nas.home
             path: /mnt/nas/media
+            readonly: false
         - name: tmp
           persistentVolumeClaim:
             claimName: media-tmp-pvc
