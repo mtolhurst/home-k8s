@@ -61,7 +61,7 @@ spec:
             - name: media
               mountPath: /multimedia
             - name: tmp
-              mountPath: /downloads
+              mountPath: /complete
               subPath: complete
 ---
 # Service
