@@ -58,10 +58,10 @@ spec:
             - name: data
               mountPath: /config
             - name: media
-              mountPath: /media
+              mountPath: /multimedia
             - name: tmp
               mountPath: /downloads
-              subPath: /complete
+              subPath: complete
 ---
 # Service
 apiVersion: v1
