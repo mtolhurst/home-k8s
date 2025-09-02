@@ -41,3 +41,5 @@ spec:
               type: LoadBalancer
           preUpgradeChecker:
             jobEnabled: false
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      path: infra/longhorn
