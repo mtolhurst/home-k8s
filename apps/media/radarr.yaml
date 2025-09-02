@@ -58,9 +58,9 @@ spec:
             - name: data
               mountPath: /config
             - name: media
-              value: /media
+              mountPath: /media
             - name: tmp
-              value: /downloads
+              mountPath: /downloads
               subPath: /complete
 ---
 # Service
