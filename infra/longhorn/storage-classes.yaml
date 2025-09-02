@@ -8,4 +8,4 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   backupTargetName: "default"
-  numberOfReplicas: "0"
+  numberOfReplicas: "1"
