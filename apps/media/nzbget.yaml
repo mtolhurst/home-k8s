@@ -17,6 +17,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: longhorn-no-replica
   resources:
     requests:
       storage: 50Gi
