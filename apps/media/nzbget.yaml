@@ -54,9 +54,6 @@ spec:
             - name: config
               mountPath: /config
             - name: tmp
-              mountPath: /intermediate
-              subPath: intermediate
-            - name: tmp
               mountPath: /complete
               subPath: complete
 ---
