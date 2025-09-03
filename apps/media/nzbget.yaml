@@ -37,6 +37,10 @@ spec:
         - name: tmp
           persistentVolumeClaim:
             claimName: media-tmp-pvc
+        - name: intermediate
+          emptyDir:
+            sizeLimit: 50Gi
+      medium: Memory
       containers:
         - name: nzbget
           image: lscr.io/linuxserver/nzbget:25.2.20250822
@@ -53,9 +57,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: tmp
+            - name: intermediate
               mountPath: /intermediate
-              subPath: intermediate
             - name: tmp
               mountPath: /complete
               subPath: complete
