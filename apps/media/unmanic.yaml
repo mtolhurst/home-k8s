@@ -30,6 +30,7 @@ metadata:
   namespace: multimedia
   labels:
     app: unmanic
+    component: main
 spec:
   strategy:
     type: Recreate
@@ -73,6 +74,58 @@ spec:
             - name: tmp
               mountPath: /tmp/unmanic
 ---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unmanic-worker-1
+  namespace: multimedia
+  labels:
+    app: unmanic
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unmanic
+  template:
+    metadata:
+      labels:
+        app: unmanic
+        component: worker-1
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: unmanic-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          emptyDir:
+      containers:
+        - name: unmanic
+          image: josh5/unmanic:0.3.0
+          ports:
+            - name: worker1-http
+              containerPort: 8888
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - name: data
+              mountPath: /config
+              subPath: worker1/
+            - name: media
+              mountPath: /library
+            - name: tmp
+              mountPath: /tmp/unmanic
+---
 # Service
 apiVersion: v1
 kind: Service
@@ -84,6 +137,21 @@ spec:
       protocol: TCP
       targetPort: http
       name: http
+  selector:
+    app: unmanic
+  type: LoadBalancer
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: unmanic-worker-1
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: worker1-http
+      name: worker1-http
   selector:
     app: unmanic
   type: LoadBalancer
