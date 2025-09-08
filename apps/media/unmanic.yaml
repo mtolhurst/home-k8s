@@ -5,7 +5,7 @@ metadata:
   name: unmanic-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 20Mi
