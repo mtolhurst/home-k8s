@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: unmaniac-pvc
+  name: unmanic-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -13,7 +13,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: unmaniac-tmp-pvc
+  name: unmanic-tmp-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -26,26 +26,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unmaniac
+  name: unmanic
   namespace: multimedia
   labels:
-    app: unmaniac
+    app: unmanic
 spec:
   strategy:
     type: Recreate
   replicas: 1
   selector:
     matchLabels:
-      app: unmaniac
+      app: unmanic
   template:
     metadata:
       labels:
-        app: unmaniac
+        app: unmanic
     spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmaniac-pvc
+            claimName: unmanic-pvc
         - name: media
           nfs:
             server: nas.home
@@ -53,9 +53,9 @@ spec:
             readonly: false
         - name: tmp
           persistentVolumeClaim:
-            claimName: unmaniac-tmp-pvc
+            claimName: unmanic-tmp-pvc
       containers:
-        - name: unmaniac
+        - name: unmanic
           image: josh5/unmanic:0.3.0
           ports:
             - name: http
@@ -71,13 +71,13 @@ spec:
             - name: media
               mountPath: /library
             - name: tmp
-              mountPath: /tmp/unmaniac
+              mountPath: /tmp/unmanic
 ---
 # Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: unmaniac
+  name: unmanic
 spec:
   ports:
     - port: 80
@@ -85,6 +85,6 @@ spec:
       targetPort: http
       name: http
   selector:
-    app: unmaniac
+    app: unmanic
   type: LoadBalancer
 ---
