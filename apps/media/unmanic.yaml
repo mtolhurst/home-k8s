@@ -41,6 +41,7 @@ spec:
                 operator: In
                 values:
                 - worker-1
+                - worker-2
               - key: app
                 operator: In
                 values:
@@ -108,6 +109,7 @@ spec:
                 operator: In
                 values:
                 - main
+                - worker-2
               - key: app
                 operator: In
                 values:
@@ -144,6 +146,74 @@ spec:
             - name: tmp
               mountPath: /tmp/unmanic
 ---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unmanic-worker-2
+  namespace: multimedia
+  labels:
+    app: unmanic
+    component: worker-2
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unmanic
+  template:
+    metadata:
+      labels:
+        app: unmanic
+        component: worker-2
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - main
+                - worker-1
+              - key: app
+                operator: In
+                values:
+                - unmanic
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: unmanic-data-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: unmanic
+          image: josh5/unmanic:0.3.0
+          ports:
+            - name: worker1-http
+              containerPort: 8888
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - name: data
+              mountPath: /config
+              subPath: worker2/
+            - name: media
+              mountPath: /library
+            - name: tmp
+              mountPath: /tmp/unmanic
+---
 # Service
 apiVersion: v1
 kind: Service
@@ -173,5 +243,21 @@ spec:
   selector:
     app: unmanic
     component: worker-1
+  type: LoadBalancer
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: unmanic-worker-2
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: worker2-http
+      name: worker2-http
+  selector:
+    app: unmanic
+    component: worker-2
   type: LoadBalancer
 ---
