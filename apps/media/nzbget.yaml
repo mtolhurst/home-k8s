@@ -10,71 +10,71 @@ spec:
     requests:
       storage: 1Gi
 ---
-# # Deployment
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: nzbget
-#   namespace: multimedia
-#   labels:
-#     app: nzbget
-# spec:
-#   strategy:
-#     type: Recreate
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: nzbget
-#   template:
-#     metadata:
-#       labels:
-#         app: nzbget
-#     spec:
-#       volumes:
-#         - name: config
-#           persistentVolumeClaim:
-#             claimName: nzbget-config-pvc
-#         - name: tmp
-#           persistentVolumeClaim:
-#             claimName: media-tmp-pvc
-#         - name: intermediate
-#           emptyDir:
-#             sizeLimit: 50Gi
-#       medium: Memory
-#       containers:
-#         - name: nzbget
-#           image: lscr.io/linuxserver/nzbget:25.3.20250901
-#           ports:
-#             - name: http
-#               containerPort: 6789
-#           env:
-#             - name: PUID
-#               value: "1000"
-#             - name: PGID
-#               value: "1000"
-#             - name: TZ
-#               value: Australia/Sydney
-#           volumeMounts:
-#             - name: config
-#               mountPath: /config
-#             - name: intermediate
-#               mountPath: /intermediate
-#             - name: tmp
-#               mountPath: /complete
-#               subPath: complete
-# ---
-# # Service
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: nzbget
-# spec:
-#   ports:
-#     - port: 80
-#       protocol: TCP
-#       targetPort: http
-#       name: http
-#   selector:
-#     app: nzbget
-#   type: LoadBalancer
-# ---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nzbget
+  namespace: multimedia
+  labels:
+    app: nzbget
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nzbget
+  template:
+    metadata:
+      labels:
+        app: nzbget
+    spec:
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: nzbget-config-pvc
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: media-tmp-pvc
+        - name: intermediate
+          emptyDir:
+            sizeLimit: 50Gi
+      medium: Memory
+      containers:
+        - name: nzbget
+          image: lscr.io/linuxserver/nzbget:25.3.20250901
+          ports:
+            - name: http
+              containerPort: 6789
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Australia/Sydney
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: intermediate
+              mountPath: /intermediate
+            - name: tmp
+              mountPath: /complete
+              subPath: complete
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nzbget
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app: nzbget
+  type: LoadBalancer
+---
