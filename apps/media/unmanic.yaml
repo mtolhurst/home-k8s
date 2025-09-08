@@ -2,25 +2,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: unmanic-pvc
+  name: unmanic-data-pvc
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 20Mi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: unmanic-tmp-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn-no-replica
-  resources:
-    requests:
-      storage: 50Gi
+      storage: 50Mi
 ---
 # Deployment
 apiVersion: apps/v1
@@ -46,15 +34,14 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmanic-pvc
+            claimName: unmanic-data-pvc
         - name: media
           nfs:
             server: nas.home
             path: /mnt/nas/media
             readonly: false
         - name: tmp
-          persistentVolumeClaim:
-            claimName: unmanic-tmp-pvc
+          emptyDir: {}
       containers:
         - name: unmanic
           image: josh5/unmanic:0.3.0
@@ -69,6 +56,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /config
+              subPath: main/
             - name: media
               mountPath: /library
             - name: tmp
@@ -105,7 +93,7 @@ spec:
             path: /mnt/nas/media
             readonly: false
         - name: tmp
-          emptyDir:
+          emptyDir: {}
       containers:
         - name: unmanic
           image: josh5/unmanic:0.3.0
