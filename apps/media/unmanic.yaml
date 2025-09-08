@@ -198,7 +198,7 @@ spec:
         - name: unmanic
           image: josh5/unmanic:0.3.0
           ports:
-            - name: worker1-http
+            - name: worker2-http
               containerPort: 8888
           env:
             - name: PUID
