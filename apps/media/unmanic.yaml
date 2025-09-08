@@ -8,7 +8,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 50Mi
+      storage: 200Mi
 ---
 # Deployment
 apiVersion: apps/v1
