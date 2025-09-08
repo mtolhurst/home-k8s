@@ -86,7 +86,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmanic-pvc
+            claimName: unmanic-data-pvc
         - name: media
           nfs:
             server: nas.home
