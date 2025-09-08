@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-feature-discovery
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: node-feature-discovery
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: node-feature-discovery
+      repoURL: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+      targetRevision: 0.17.3
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      path: infra/node-feature-discovery
