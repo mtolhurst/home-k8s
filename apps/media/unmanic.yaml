@@ -30,7 +30,22 @@ spec:
     metadata:
       labels:
         app: unmanic
+        component: main
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - worker-1
+              - key: app
+                operator: In
+                values:
+                - unmanic
+            topologyKey: kubernetes.io/hostname
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -70,6 +85,7 @@ metadata:
   namespace: multimedia
   labels:
     app: unmanic
+    component: worker-1
 spec:
   strategy:
     type: Recreate
@@ -83,6 +99,20 @@ spec:
         app: unmanic
         component: worker-1
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - main
+              - key: app
+                operator: In
+                values:
+                - unmanic
+            topologyKey: kubernetes.io/hostname
       volumes:
         - name: data
           persistentVolumeClaim:
