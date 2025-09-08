@@ -13,6 +13,10 @@ spec:
       prune: true 
       selfHeal: true
       allowEmpty: false 
+    managedNamespaceMetadata:
+      labels:
+        kubernetes.io/metadata.name: node-feature-discovery
+        pod-security.kubernetes.io/enforce: privileged
   destination:
     namespace: node-feature-discovery
     server: {{ .Values.spec.destination.server }}
