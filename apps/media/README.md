@@ -12,8 +12,8 @@ Made up of
   * Prowlarr for managing indexers for the above *arr apps
 * Nzbget for fetching media from usenet
 * Jellyfin for hosting/streaming media (hosted externally, on nas)
+* Unmaniac for managing library
 
 ## TODO
 * Subtitles manager
 * Lidarr & Readarr
-* Handbrake, for transcoding downloaded media

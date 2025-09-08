@@ -1,0 +1,90 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unmaniac-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unmaniac-tmp-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn-no-replica
+  resources:
+    requests:
+      storage: 50Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unmaniac
+  namespace: multimedia
+  labels:
+    app: unmaniac
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unmaniac
+  template:
+    metadata:
+      labels:
+        app: unmaniac
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: unmaniac-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: unmaniac-tmp-pvc
+      containers:
+        - name: unmaniac
+          image: josh5/unmanic:0.3.0
+          ports:
+            - name: http
+              containerPort: 8888
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - name: data
+              mountPath: /config
+            - name: media
+              mountPath: /library
+            - name: tmp
+              mountPath: /tmp/unmaniac
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: unmaniac
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app: unmaniac
+  type: LoadBalancer
+---
