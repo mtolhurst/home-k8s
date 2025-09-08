@@ -142,5 +142,6 @@ spec:
       name: worker1-http
   selector:
     app: unmanic
+    component: worker-1
   type: LoadBalancer
 ---
