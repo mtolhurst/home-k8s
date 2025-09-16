@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: unmanic-data-pvc
+  name: tdarr-data-pvc
 spec:
   accessModes:
     - ReadWriteMany
@@ -14,10 +14,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unmanic
+  name: tdarr
   namespace: multimedia
   labels:
-    app: unmanic
+    app: tdarr
     component: main
 spec:
   strategy:
@@ -25,11 +25,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: unmanic
+      app: tdar
   template:
     metadata:
       labels:
-        app: unmanic
+        app: tdarr
         component: main
     spec:
       affinity:
@@ -45,12 +45,12 @@ spec:
               - key: app
                 operator: In
                 values:
-                - unmanic
+                - tdarr
             topologyKey: kubernetes.io/hostname
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmanic-data-pvc
+            claimName: tdarr-data-pvc
         - name: media
           nfs:
             server: nas.home
@@ -59,33 +59,64 @@ spec:
         - name: tmp
           emptyDir: {}
       containers:
-        - name: unmanic
-          image: josh5/unmanic:0.3.0
+        - name: tdarr
+          image: ghcr.io/haveagitgat/tdarr:2.46.01
           ports:
             - name: http
-              containerPort: 8888
+              containerPort: 8265
+            - name: server
+              containerPort: 8266
           env:
+            - name: TZ
+              value: Australia/Sydney
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
+            - name: serverIp
+              value: 0.0.0.0
+            - name: serverPort
+              value: "8266"
+            - name: uiPort
+              value: "8265"
+            - name: internalNode
+              value: "true"
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: main
+            - name: auth
+              value: "false"
+            - name: openBrowser
+              value: "true"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: transcodecpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
           volumeMounts:
             - name: data
-              mountPath: /config
-              subPath: main/
+              mountPath: /app/server
+              subPath: server/
+            - name: data
+              mountPath: /app/configs
+              subPath: configs/
             - name: media
-              mountPath: /library
+              mountPath: /media
             - name: tmp
-              mountPath: /tmp/unmanic
+              mountPath: /temp
 ---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unmanic-worker-1
+  name: tdarr-worker-1
   namespace: multimedia
   labels:
-    app: unmanic
+    app: tdarr
     component: worker-1
 spec:
   strategy:
@@ -93,11 +124,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: unmanic
+      app: tdarr
   template:
     metadata:
       labels:
-        app: unmanic
+        app: tdarr
         component: worker-1
     spec:
       affinity:
@@ -113,12 +144,12 @@ spec:
               - key: app
                 operator: In
                 values:
-                - unmanic
+                - tdarr
             topologyKey: kubernetes.io/hostname
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmanic-data-pvc
+            claimName: tdarr-data-pvc
         - name: media
           nfs:
             server: nas.home
@@ -127,33 +158,56 @@ spec:
         - name: tmp
           emptyDir: {}
       containers:
-        - name: unmanic
-          image: josh5/unmanic:0.3.0
-          ports:
-            - name: worker1-http
-              containerPort: 8888
+        - name: tdarr
+          image: ghcr.io/haveagitgat/tdarr_node:2.46.01
           env:
+            - name: TZ
+              value: Australia/Sydney
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
+            - name: serverIp
+              value: tdarr-server
+            - name: serverPort
+              value: "8266"
+            - name: nodeType
+              value: mapped
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: worker1
+            - name: auth
+              value: "false"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: pollInterval
+              value: "2000"
+            - name: startPaused
+              value: "false"
+            - name: transcodecpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
           volumeMounts:
             - name: data
-              mountPath: /config
-              subPath: worker1/
+              mountPath: /app/configs
+              subPath: configs/
             - name: media
-              mountPath: /library
+              mountPath: /media
             - name: tmp
-              mountPath: /tmp/unmanic
+              mountPath: /temp
 ---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: unmanic-worker-2
+  name: tdarr-worker-2
   namespace: multimedia
   labels:
-    app: unmanic
+    app: tdarr
     component: worker-2
 spec:
   strategy:
@@ -161,11 +215,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: unmanic
+      app: tdarr
   template:
     metadata:
       labels:
-        app: unmanic
+        app: tdarr
         component: worker-2
     spec:
       affinity:
@@ -181,12 +235,12 @@ spec:
               - key: app
                 operator: In
                 values:
-                - unmanic
+                - tdarr
             topologyKey: kubernetes.io/hostname
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: unmanic-data-pvc
+            claimName: tdarr-data-pvc
         - name: media
           nfs:
             server: nas.home
@@ -195,30 +249,53 @@ spec:
         - name: tmp
           emptyDir: {}
       containers:
-        - name: unmanic
-          image: josh5/unmanic:0.3.0
-          ports:
-            - name: worker2-http
-              containerPort: 8888
+        - name: tdarr
+          image: ghcr.io/haveagitgat/tdarr_node:2.46.01
           env:
+            - name: TZ
+              value: Australia/Sydney
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
+            - name: serverIp
+              value: tdarr-server
+            - name: serverPort
+              value: "8266"
+            - name: nodeType
+              value: mapped
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: worker2
+            - name: auth
+              value: "false"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: pollInterval
+              value: "2000"
+            - name: startPaused
+              value: "false"
+            - name: transcodecpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
           volumeMounts:
             - name: data
-              mountPath: /config
-              subPath: worker2/
+              mountPath: /app/configs
+              subPath: configs/
             - name: media
-              mountPath: /library
+              mountPath: /media
             - name: tmp
-              mountPath: /tmp/unmanic
+              mountPath: /temp
 ---
 # Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: unmanic
+  name: tdarr
 spec:
   ports:
     - port: 80
@@ -226,38 +303,23 @@ spec:
       targetPort: http
       name: http
   selector:
-    app: unmanic
+    app: tdarr
+    component: main
   type: LoadBalancer
 ---
 # Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: unmanic-worker-1
+  name: tdarr-server
 spec:
   ports:
-    - port: 80
+    - port: 8266
       protocol: TCP
-      targetPort: worker1-http
-      name: worker1-http
+      targetPort: server
+      name: tdarr-server
   selector:
-    app: unmanic
-    component: worker-1
-  type: LoadBalancer
----
-# Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: unmanic-worker-2
-spec:
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: worker2-http
-      name: worker2-http
-  selector:
-    app: unmanic
-    component: worker-2
-  type: LoadBalancer
+    app: tdar
+    component: main
+  type: ClusterIP
 ---
