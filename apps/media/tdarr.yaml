@@ -25,8 +25,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tdar
-      component: main
+      app: tdarr
   template:
     metadata:
       labels:
