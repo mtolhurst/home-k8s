@@ -73,7 +73,7 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-            - name: serverIp
+            - name: serverIP
               value: 0.0.0.0
             - name: serverPort
               value: "8266"
@@ -167,7 +167,7 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-            - name: serverIp
+            - name: serverIP
               value: tdarr-server
             - name: serverPort
               value: "8266"
@@ -258,7 +258,7 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-            - name: serverIp
+            - name: serverIP
               value: tdarr-server
             - name: serverPort
               value: "8266"
