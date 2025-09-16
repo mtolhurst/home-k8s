@@ -328,7 +328,7 @@ spec:
       targetPort: server
       name: tdarr-server
   selector:
-    app: tdar
+    app: tdarr
     component: main
   type: ClusterIP
 ---
