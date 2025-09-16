@@ -60,6 +60,9 @@ spec:
           emptyDir: {}
       containers:
         - name: tdarr
+          resources:
+            limits:
+              cpu: 1500m
           image: ghcr.io/haveagitgat/tdarr:2.46.01
           ports:
             - name: http
@@ -159,6 +162,9 @@ spec:
           emptyDir: {}
       containers:
         - name: tdarr
+          resources:
+            limits:
+              cpu: 1500m
           image: ghcr.io/haveagitgat/tdarr_node:2.46.01
           env:
             - name: TZ
@@ -250,6 +256,9 @@ spec:
           emptyDir: {}
       containers:
         - name: tdarr
+          resources:
+            limits:
+              cpu: 1500m
           image: ghcr.io/haveagitgat/tdarr_node:2.46.01
           env:
             - name: TZ
