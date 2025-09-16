@@ -26,6 +26,7 @@ spec:
   selector:
     matchLabels:
       app: tdar
+      component: main
   template:
     metadata:
       labels:
