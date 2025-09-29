@@ -10,26 +10,13 @@ spec:
   instances: 1
   imageName: ghcr.io/mtolhurst/postgresql:15.3-pgvector@sha256:e9c502da08471b5cf1e48290c8624fdc8cee50a9aa370f83f5d357a2470ad00f
   storage:
-    size: 20Gi
+    size: 2Gi
   bootstrap:
     initdb:
       postInitApplicationSQL:
         - CREATE EXTENSION IF NOT EXISTS vector
         - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
 
----
-# PVC for immich data not in pg
-# TODO replace this with NFS
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: immich-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
 ---
 # Deployment
 apiVersion: apps/v1
@@ -53,8 +40,13 @@ spec:
     spec:
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: immich-pvc
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media/Photos
+            readonly: false
+        - name: cache
+          emptyDir:
+            sizeLimit: 1Gi
       containers:
         - name: redis
           image: redis:8.2-alpine
@@ -66,9 +58,8 @@ spec:
           image: ghcr.io/immich-app/immich-machine-learning:v1.143.1
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - name: data
+            - name: cache
               mountPath: /cache
-              subPath: ml-cache/
           ports:
             - name: ml
               containerPort: 3003
@@ -137,7 +128,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /usr/src/app/upload
-              subPath: uploads/
           env: 
             - name: IMMICH_LOG_LEVEL
               value: verbose
