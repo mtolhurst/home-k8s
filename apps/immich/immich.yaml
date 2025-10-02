@@ -55,7 +55,7 @@ spec:
             - name: redis
               containerPort: 6379
         - name: machine-learning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.144.1
+          image: ghcr.io/immich-app/immich-machine-learning:v2.0.0
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: cache
