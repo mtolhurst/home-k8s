@@ -51,7 +51,7 @@ spec:
           image: redis:8.2.2-alpine
           imagePullPolicy: IfNotPresent
         - name: webserver
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.19.1
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.19.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
