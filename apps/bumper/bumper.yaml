@@ -39,7 +39,7 @@ spec:
                 path: nginx.conf
       containers:
         - name: nginx
-          image: nginx:1.29.2-alpine
+          image: nginx:1.29.3-alpine
           ports:
             - name: port1
               containerPort: 443
