@@ -37,6 +37,14 @@ spec:
       containers:
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:2.3.0
+          livenessProbe:
+            httpGet:
+              path: /api/v1/system/status
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/v1/system/status
+              port: http
           ports:
             - name: http
               containerPort: 9696
