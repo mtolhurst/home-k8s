@@ -52,7 +52,7 @@ spec:
             - name: config
               mountPath: /config
             - name: backup
-              mountPath: config/backups
+              mountPath: /config/backups
 ---
 # Service
 apiVersion: v1
