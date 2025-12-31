@@ -1,0 +1,100 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-pvc
+spec:
+  storageClassName: longhorn-no-replica
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+    listener 1883 0.0.0.0
+    allow_anonymous true
+    password_file /mosquitto/config/password.txt
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-password
+data:
+  password.txt: |
+    mqtt:$7$100$mEuP7Vq8oK4k1AFM$+XBhAqLpxxctWvo1zPc1/VKnZkaIKmwr3OdD6xLbyUNXoS28gKfQ7PqQt3y4ZXRZPdILjkNF6fvUFaKjiR5v0Q==
+  # TODO this should probably be a secret
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - image: eclipse-mosquitto:2.0.22
+        name: mosquitto
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "10m"
+        ports:
+        - containerPort: 1883
+          name: mosquitto
+        volumeMounts:
+        - name: mosquitto-persistent-storage
+          mountPath: /mosquitto/data
+        - name: mosquitto-password
+          mountPath: /mosquitto/config/password.txt
+          subPath: password.txt
+        - name: mosquitto-config
+          mountPath: /mosquitto/config/mosquitto.conf
+          subPath: mosquitto.conf
+      volumes:
+      - name: mosquitto-persistent-storage
+        persistentVolumeClaim:
+          claimName: pvc-mosquitto
+      - name: mosquitto-password
+        configMap:
+          name: mosquitto-password
+          items:
+          - key: "password.txt"
+            path: "password.txt"
+      - name: mosquitto-config
+        configMap:
+          name: mosquitto-config
+          items:
+          - key: "mosquitto.conf"
+            path: "mosquitto.conf"
+            apiVersion: v1
+---
+kind: Service
+metadata:
+  name: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  ports:
+    - port: 1883
+      targetPort: 1883
+      name: mosquitto
+  selector:
+    app: mosquitto
+  type: LoadBalancer
+---
