@@ -69,7 +69,7 @@ spec:
       volumes:
       - name: mosquitto-persistent-storage
         persistentVolumeClaim:
-          claimName: pvc-mosquitto
+          claimName: mosquitto-pvc
       - name: mosquitto-password
         configMap:
           name: mosquitto-password
