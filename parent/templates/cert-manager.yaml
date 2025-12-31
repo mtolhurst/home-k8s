@@ -18,8 +18,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
-    - chart: cert-manager
-      repoURL: oci://quay.io/jetstack/charts
+    - repoURL: oci://quay.io/jetstack/charts/cert-manager
       targetRevision: 1.19.2
       helm:
         valuesObject:
