@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: intel-device-plugin
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        kubernetes.io/metadata.name: intel-device-plugin
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: intel-device-plugin
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: device-plugin-operator
+      repoURL: https://intel.github.io/helm-charts/
+      targetRevision: 0.34.1
+      helm:
+        valuesObject:
+          name: gpudeviceplugin
+          sharedDevNum: 1
+          logLevel: 2
+          resourceManager: false
+          enableMonitoring: true
+          allocationPolicy: "none"
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: 'true'
+          nodeFeatureRule: true
