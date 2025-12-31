@@ -82,7 +82,6 @@ spec:
           items:
           - key: "mosquitto.conf"
             path: "mosquitto.conf"
-            apiVersion: v1
 ---
 # Service
 apiVersion: v1
