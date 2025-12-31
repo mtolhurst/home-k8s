@@ -84,6 +84,8 @@ spec:
             path: "mosquitto.conf"
             apiVersion: v1
 ---
+# Service
+apiVersion: v1
 kind: Service
 metadata:
   name: mosquitto
