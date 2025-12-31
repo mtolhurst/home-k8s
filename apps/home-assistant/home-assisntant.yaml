@@ -1,0 +1,70 @@
+---
+# PVC for config
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ha-pvc
+spec:
+  storageClass: longhorn-no-replica
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+  namespace: home-assistant
+  labels:
+    app: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: home-assistant
+  template:
+    metadata:
+      labels:
+        app: home-assistant
+    spec:
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: ha-pvc
+        - name: backup
+          nfs:
+            server: nas.home
+            path: /mnt/nas/backups/home-assistant
+      containers:
+        - name: ha
+          image: homeassistant/home-assistant:2025.12.4
+          resources:
+            requests:
+              memory: 256Mi
+          ports:
+            - name: http
+              containerPort: 8123
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: backup
+              mountPath: config/backups
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: home-assistant
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app: home-assistant
+  type: LoadBalancer

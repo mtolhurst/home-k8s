@@ -18,12 +18,6 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
-    - chart: home-assistant
-      repoURL: http://pajikos.github.io/home-assistant-helm-chart/
-      targetRevision: 0.3.4
-      helm:
-        valuesObject:
-          service:
-            type: LoadBalancer
-            port: 80
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      path: apps/home-assistant
           
