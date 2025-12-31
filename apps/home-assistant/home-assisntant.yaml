@@ -5,7 +5,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: ha-pvc
 spec:
-  storageClass: longhorn-no-replica
+  storageClassName: longhorn-no-replica
   accessModes:
     - ReadWriteOnce
   resources:
