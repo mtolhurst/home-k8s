@@ -7,6 +7,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io 
 spec:
   syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        kubernetes.io/metadata.name: node-feature-discovery
+        pod-security.kubernetes.io/enforce: privileged
     syncOptions:
       - CreateNamespace=true
     automated: 
