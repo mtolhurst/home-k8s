@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: cert-manager
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: cert-manage
+      repoURL: oci://quay.io/jetstack/charts
+      targetRevision: 1.19.2
