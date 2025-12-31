@@ -40,7 +40,7 @@ spec:
             path: /mnt/nas/backups/home-assistant
       containers:
         - name: ha
-          image: homeassistant/home-assistant:2025.12.4
+          image: homeassistant/home-assistant:2025.12.5
           resources:
             requests:
               memory: 256Mi
