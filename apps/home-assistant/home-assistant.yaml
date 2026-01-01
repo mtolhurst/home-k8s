@@ -40,6 +40,16 @@ spec:
           nfs:
             server: nas.home
             path: /mnt/nas/backups/home-assistant
+      initContainers:
+        - name: ha
+          image: homeassistant/home-assistant:2025.12.5
+          command: wget -O - https://get.hacs.xyz | bash -
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: backup
+              mountPath: /config/backups
       containers:
         - name: ha
           image: homeassistant/home-assistant:2025.12.5
