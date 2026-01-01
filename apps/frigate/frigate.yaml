@@ -79,28 +79,28 @@ spec:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
               gpu.intel.com/i915: 1 
-            ports:
-            - name: http
-              containerPort: 5000
-              protocol: TCP
-            - name: http-auth
-              containerPort: 8971
-              protocol: TCP
-            - name: rtmp
-              containerPort: 1935
-              protocol: TCP
-            - name: rtsp
-              containerPort: 8554
-              protocol: TCP
-            - name: webrtc-udp
-              containerPort: 8555
-              protocol: UDP
-            - name: webrtc-tcp
-              containerPort: 8555
-              protocol: TCP
-            - name: go2rtc-admin
-              containerPort: 1984
-              protocol: TCP
+          ports:
+          - name: http
+            containerPort: 5000
+            protocol: TCP
+          - name: http-auth
+            containerPort: 8971
+            protocol: TCP
+          - name: rtmp
+            containerPort: 1935
+            protocol: TCP
+          - name: rtsp
+            containerPort: 8554
+            protocol: TCP
+          - name: webrtc-udp
+            containerPort: 8555
+            protocol: UDP
+          - name: webrtc-tcp
+            containerPort: 8555
+            protocol: TCP
+          - name: go2rtc-admin
+            containerPort: 1984
+            protocol: TCP
           volumeMounts:
           - mountPath: /config
             name: config
