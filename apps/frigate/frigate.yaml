@@ -61,6 +61,14 @@ spec:
             sizeLimit: 1Gi
       containers:
         - name: frigate
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           image: ghcr.io/blakeblackshear/frigate:0.16.3
           securityContext:
             capabilities:
@@ -93,14 +101,6 @@ spec:
             - name: go2rtc-admin
               containerPort: 1984
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           volumeMounts:
           - mountPath: /config
             name: config
