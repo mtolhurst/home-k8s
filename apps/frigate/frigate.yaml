@@ -62,7 +62,7 @@ spec:
           resources:
             requests:
               memory: 512Mi
-              gpu.intel.com/i915: 0.5 # ensuring this is scheduled on a node with GPU
+              gpu.intel.com/i915: 500m # ensuring this is scheduled on a node with GPU
             ports:
             - name: http
               containerPort: 5000
