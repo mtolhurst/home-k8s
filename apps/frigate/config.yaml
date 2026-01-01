@@ -42,3 +42,16 @@ data:
         detect:
           width: 2560
           height: 1920
+    record:
+      enabled: True
+      retain:
+        days: 14
+        mode: all
+      alerts:
+        retain:
+          days: 90
+          mode: motion
+      detections:
+        retain:
+          days: 90
+          mode: motion
