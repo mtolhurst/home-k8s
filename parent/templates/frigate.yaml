@@ -18,21 +18,5 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
-    - chart: frigate
-      repoURL: https://blakeblackshear.github.io/blakeshome-charts/
-      targetRevision: 7.9.0
-      helm:
-        valuesObject:
-          config: |
-              mqtt:
-                host: "mqtt.home"
-                port: 1883
-                user: mqtt
-                password: mqtt
-          cameras:
-            front_door:
-              ffmpeg:
-                inputs:
-                  - path: rtsp://frigate:frigate123@192.168.3.2:554/h264Preview_01_main
-                    roles:
-                      - detect
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      path: apps/frigate
