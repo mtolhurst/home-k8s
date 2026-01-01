@@ -21,7 +21,8 @@ metadata:
   labels:
     app: home-assistant
 spec:
-  strategy: recreate
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
