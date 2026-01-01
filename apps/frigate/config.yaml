@@ -33,6 +33,6 @@ data:
               roles:
                 - detect
                 - record
-        width: 2560
-        height: 1920
-        fps: 20
+        detect:
+          width: 2560
+          height: 1920
