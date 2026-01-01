@@ -41,7 +41,7 @@ spec:
             server: nas.home
             path: /mnt/nas/backups/home-assistant
       initContainers:
-        - name: ha
+        - name: ha-init
           image: homeassistant/home-assistant:2025.12.5
           command: ["wget", "-O", "-", "https://get.hacs.xyz", "|", "bash", "-"]
           imagePullPolicy: IfNotPresent
