@@ -62,6 +62,9 @@ spec:
       containers:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:0.16.3
+          securityContext:
+            capabilities:
+              add: ["PERFMON"]
           resources:
             requests:
               memory: 512Mi
