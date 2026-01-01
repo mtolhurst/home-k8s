@@ -31,7 +31,7 @@ spec:
       helm:
         valuesObject:
           name: gpudeviceplugin
-          sharedDevNum: 1
+          sharedDevNum: 5
           logLevel: 2
           resourceManager: false
           enableMonitoring: true
