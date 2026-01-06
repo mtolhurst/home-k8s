@@ -11,7 +11,7 @@ metadata:
 data:
   config.yaml: |
     mqtt:
-      host: mosquitto
+      host: mqtt.home
       port: 1883
       user: mqtt
       password: mqtt
