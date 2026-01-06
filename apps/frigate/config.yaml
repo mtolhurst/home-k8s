@@ -13,8 +13,6 @@ data:
     mqtt:
       host: mosquitto
       port: 1883
-      topic_prefix: frigate
-      client_id: frigate
       user: mqtt
       password: mqtt
       stats_interval: 30
