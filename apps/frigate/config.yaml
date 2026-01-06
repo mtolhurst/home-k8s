@@ -12,7 +12,7 @@ data:
   config.yaml: |
     mqtt:
       enabled: True
-      host: mqtt.home
+      host: mqtt://mqtt.home
       port: 1883
       topic_prefix: frigate
       client_id: frigate
