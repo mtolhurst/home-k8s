@@ -11,8 +11,7 @@ metadata:
 data:
   config.yaml: |
     mqtt:
-      enabled: True
-      host: mqtt://mqtt.home
+      host: mosquitto
       port: 1883
       topic_prefix: frigate
       client_id: frigate
