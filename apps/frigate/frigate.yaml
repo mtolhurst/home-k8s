@@ -123,7 +123,7 @@ spec:
       protocol: TCP
       targetPort: http
       name: http
-    - port: 8971
+    - port: 443
       protocol: TCP
       targetPort: http-auth
       name: http-auth
