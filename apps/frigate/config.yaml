@@ -12,13 +12,13 @@ data:
   config.yaml: |
     mqtt:
       enabled: True
-      host: mosquitto
+      host: mqtt.home
       port: 1883
       topic_prefix: frigate
       client_id: frigate
       user: mqtt
       password: mqtt
-      stats_interval: 60
+      stats_interval: 30
 
     detectors:
       ov_0:
