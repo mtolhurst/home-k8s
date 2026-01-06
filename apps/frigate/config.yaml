@@ -15,7 +15,6 @@ data:
       port: 1883
       user: mqtt
       password: mqtt
-      stats_interval: 30
 
     detectors:
       ov_0:
