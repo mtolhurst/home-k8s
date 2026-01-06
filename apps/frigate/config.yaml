@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frigate-config
-  namespace: homeassistant/frigate
+  namespace: frigate
   labels:
     name: frigate
 data:
