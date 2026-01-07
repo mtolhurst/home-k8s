@@ -43,6 +43,11 @@ data:
           - ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=frigate&password=frigate123#audio=opus#audio=volume
     cameras:
       front_door:
+        onvif:
+          host: 192.168.3.2
+          port: 8000
+          user: frigate
+          password: frigate123
         ffmpeg:
           output_args:
             record: preset-record-generic-audio-aac
