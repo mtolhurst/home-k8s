@@ -59,6 +59,7 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+      hostNetwork: true
       containers:
         - name: frigate
           livenessProbe:
