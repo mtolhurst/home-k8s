@@ -34,11 +34,14 @@ data:
           - frigate.home:8555
           - 10.2.16.13:8555
           - stun:8555
+      ffmpeg:
+        volume: -af "volume=10dB"
       streams:
         front_door:
-          - "ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=frigate&password=frigate123#video=copy#audio=copy#audio=opus"
+          - rtsp://frigate:frigate123@192.168.3.2:554/h264Preview_01_main
+          - ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=frigate&password=frigate123#audio=opus#audio=volume
         front_door_sub:
-          - "ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=frigate&password=frigate123"
+          - rtsp://frigate:frigate123@192.168.3.2:554/h264Preview_01_sub
     cameras:
       front_door:
         ffmpeg:
