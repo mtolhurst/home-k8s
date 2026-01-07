@@ -29,11 +29,9 @@ data:
       labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     go2rtc:
       webrtc:
-        listen: ":8555"
         candidates:
-          - frigate.home:8555
           - 10.2.16.13:8555
-          - stun:8555
+          - frigate.home:8555
       ffmpeg:
         volume: -af "volume=10dB"
       streams:
