@@ -29,6 +29,7 @@ data:
       labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     go2rtc:
       webrtc:
+        listen: ":8555"
         candidates:
           - 10.2.16.13:8555
           - frigate.home:8555
@@ -43,11 +44,8 @@ data:
           - ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=frigate&password=frigate123#audio=opus#audio=volume
     cameras:
       front_door:
-        onvif:
-          host: 192.168.3.2
-          port: 8000
-          user: frigate
-          password: frigate123
+        live:
+          stream_name: doorbell_camera
         ffmpeg:
           output_args:
             record: preset-record-generic-audio-aac
