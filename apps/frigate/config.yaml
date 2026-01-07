@@ -45,6 +45,7 @@ data:
     cameras:
       front_door:
         ffmpeg:
+          hwaccel_args: preset-intel-qsv-h264
           output_args:
             record: preset-record-generic-audio-aac
           inputs:
