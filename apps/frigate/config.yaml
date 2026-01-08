@@ -67,6 +67,10 @@ data:
         detect:
           enabled: true
           fps: 5
+        motion:
+          mask:
+            - 0.168,0.464,0.178,0.309,0.594,0.182,0.602,0.544
+            - 0.637,0.002,0.666,0.561,0.817,0.584,0.997,0.596,0.998,0.004
         zones:
           front_door__front_deck_and_path:
             coordinates: 
