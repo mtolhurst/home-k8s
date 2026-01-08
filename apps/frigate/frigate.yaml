@@ -59,6 +59,18 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+      initContainers:
+        - name: copyconfig
+          image: 
+          image: ghcr.io/blakeblackshear/frigate:0.16.3
+          volumeMounts:
+            - mountPath: /config.yml
+              subPath: config.yml
+              name: configmap
+            - mountPath: /config
+              name: config
+          command: [ "cp" ]
+          args: [ "-v", "/config.yml", "/config/config.yml" ]
       containers:
         - name: frigate
           livenessProbe:
@@ -104,9 +116,6 @@ spec:
           volumeMounts:
           - mountPath: /config
             name: config
-          - mountPath: /config/config.yml
-            subPath: config.yaml
-            name: configmap
           - mountPath: /media
             name: media
           - name: dshm
