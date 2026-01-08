@@ -44,6 +44,13 @@ data:
           - ffmpeg:http://192.168.3.2/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=frigate&password=frigate123#audio=opus#audio=volume
     cameras:
       front_door:
+        review:
+          alerts:
+            required_zones:
+              - front_door__front_deck_and_path
+          detections:
+            required_zones:
+              - front_door__front_yard
         ffmpeg:
           hwaccel_args: preset-intel-qsv-h264
           output_args:
@@ -60,6 +67,15 @@ data:
         detect:
           enabled: true
           fps: 5
+        zones:
+          front_door__front_deck_and_path:
+            coordinates: 
+              0.024,0.907,0.211,0.821,0.266,0.833,0.375,0.735,0.452,0.712,0.491,0.652,0.732,0.681,0.747,0.774,0.667,0.779,0.654,0.935,0.992,0.782,0.997,0.996,0.002,0.996
+            loitering_time: 0
+          front_door__front_yard:
+            coordinates: 
+              0.003,0.992,0.021,0.902,0.201,0.811,0.169,0.624,0.168,0.481,0.564,0.578,0.994,0.624,0.998,0.999
+            loitering_time: 0
     record:
       enabled: True
       retain:
