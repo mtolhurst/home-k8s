@@ -110,7 +110,7 @@ data:
     record:
       enabled: True
       retain:
-        days: 10
+        days: 7
         mode: all
       alerts:
         retain:
