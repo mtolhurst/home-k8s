@@ -113,10 +113,14 @@ data:
         days: 7
         mode: all
       alerts:
+        pre_capture: 15
+        post_capture: 15
         retain:
           days: 90
           mode: all
       detections:
+        pre_capture: 15
+        post_capture: 15
         retain:
           days: 90
           mode: all
