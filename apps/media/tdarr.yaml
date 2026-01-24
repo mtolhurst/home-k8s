@@ -1,334 +1,242 @@
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: tdarr-data-pvc
-# spec:
-#   accessModes:
-#     - ReadWriteMany
-#   resources:
-#     requests:
-#       storage: 2Gi
-# ---
-# # Deployment
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: tdarr
-#   namespace: multimedia
-#   labels:
-#     app: tdarr
-#     component: main
-# spec:
-#   strategy:
-#     type: Recreate
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: tdarr
-#   template:
-#     metadata:
-#       labels:
-#         app: tdarr
-#         component: main
-#     spec:
-#       affinity:
-#         podAntiAffinity:
-#           requiredDuringSchedulingIgnoredDuringExecution:
-#           - labelSelector:
-#               matchExpressions:
-#               - key: component
-#                 operator: In
-#                 values:
-#                 - worker-1
-#                 - worker-2
-#               - key: app
-#                 operator: In
-#                 values:
-#                 - tdarr
-#             topologyKey: kubernetes.io/hostname
-#       volumes:
-#         - name: data
-#           persistentVolumeClaim:
-#             claimName: tdarr-data-pvc
-#         - name: media
-#           nfs:
-#             server: nas.home
-#             path: /mnt/nas/media
-#             readonly: false
-#         - name: tmp
-#           emptyDir: {}
-#       containers:
-#         - name: tdarr
-#           resources:
-#             limits:
-#               cpu: 1500m
-#           image: ghcr.io/haveagitgat/tdarr:2.46.01
-#           ports:
-#             - name: http
-#               containerPort: 8265
-#             - name: server
-#               containerPort: 8266
-#           env:
-#             - name: TZ
-#               value: Australia/Sydney
-#             - name: PUID
-#               value: "1000"
-#             - name: PGID
-#               value: "1000"
-#             - name: serverIP
-#               value: tdarr-server
-#             - name: serverPort
-#               value: "8266"
-#             - name: uiPort
-#               value: "8265"
-#             - name: internalNode
-#               value: "true"
-#             - name: inContainer
-#               value: "true"
-#             - name: ffmpegVersion
-#               value: "7"
-#             - name: nodeName
-#               value: main
-#             - name: auth
-#               value: "false"
-#             - name: openBrowser
-#               value: "true"
-#             - name: maxLogSizeMB
-#               value: "10"
-#             - name: transcodecpuWorkers
-#               value: "1"
-#             - name: healthcheckcpuWorkers
-#               value: "1"
-#           volumeMounts:
-#             - name: data
-#               mountPath: /app/server
-#               subPath: server/
-#             - name: data
-#               mountPath: /app/configs
-#               subPath: configs/
-#             - name: media
-#               mountPath: /media
-#             - name: tmp
-#               mountPath: /temp
-# ---
-# # Deployment
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: tdarr-worker-1
-#   namespace: multimedia
-#   labels:
-#     app: tdarr
-#     component: worker-1
-# spec:
-#   strategy:
-#     type: Recreate
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: tdarr
-#   template:
-#     metadata:
-#       labels:
-#         app: tdarr
-#         component: worker-1
-#     spec:
-#       affinity:
-#         podAntiAffinity:
-#           requiredDuringSchedulingIgnoredDuringExecution:
-#           - labelSelector:
-#               matchExpressions:
-#               - key: component
-#                 operator: In
-#                 values:
-#                 - main
-#                 - worker-2
-#               - key: app
-#                 operator: In
-#                 values:
-#                 - tdarr
-#             topologyKey: kubernetes.io/hostname
-#       volumes:
-#         - name: data
-#           persistentVolumeClaim:
-#             claimName: tdarr-data-pvc
-#         - name: media
-#           nfs:
-#             server: nas.home
-#             path: /mnt/nas/media
-#             readonly: false
-#         - name: tmp
-#           emptyDir: {}
-#       containers:
-#         - name: tdarr
-#           resources:
-#             limits:
-#               cpu: 1500m
-#           image: ghcr.io/haveagitgat/tdarr_node:2.46.01
-#           env:
-#             - name: TZ
-#               value: Australia/Sydney
-#             - name: PUID
-#               value: "1000"
-#             - name: PGID
-#               value: "1000"
-#             - name: serverIP
-#               value: tdarr-server
-#             - name: serverPort
-#               value: "8266"
-#             - name: nodeType
-#               value: mapped
-#             - name: inContainer
-#               value: "true"
-#             - name: ffmpegVersion
-#               value: "7"
-#             - name: nodeName
-#               value: worker1
-#             - name: auth
-#               value: "false"
-#             - name: maxLogSizeMB
-#               value: "10"
-#             - name: pollInterval
-#               value: "2000"
-#             - name: startPaused
-#               value: "false"
-#             - name: transcodecpuWorkers
-#               value: "1"
-#             - name: healthcheckcpuWorkers
-#               value: "1"
-#           volumeMounts:
-#             - name: data
-#               mountPath: /app/configs
-#               subPath: configs/
-#             - name: media
-#               mountPath: /media
-#             - name: tmp
-#               mountPath: /temp
-# ---
-# # Deployment
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: tdarr-worker-2
-#   namespace: multimedia
-#   labels:
-#     app: tdarr
-#     component: worker-2
-# spec:
-#   strategy:
-#     type: Recreate
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: tdarr
-#   template:
-#     metadata:
-#       labels:
-#         app: tdarr
-#         component: worker-2
-#     spec:
-#       affinity:
-#         podAntiAffinity:
-#           requiredDuringSchedulingIgnoredDuringExecution:
-#           - labelSelector:
-#               matchExpressions:
-#               - key: component
-#                 operator: In
-#                 values:
-#                 - main
-#                 - worker-1
-#               - key: app
-#                 operator: In
-#                 values:
-#                 - tdarr
-#             topologyKey: kubernetes.io/hostname
-#       volumes:
-#         - name: data
-#           persistentVolumeClaim:
-#             claimName: tdarr-data-pvc
-#         - name: media
-#           nfs:
-#             server: nas.home
-#             path: /mnt/nas/media
-#             readonly: false
-#         - name: tmp
-#           emptyDir: {}
-#       containers:
-#         - name: tdarr
-#           resources:
-#             limits:
-#               cpu: 1500m
-#           image: ghcr.io/haveagitgat/tdarr_node:2.46.01
-#           env:
-#             - name: TZ
-#               value: Australia/Sydney
-#             - name: PUID
-#               value: "1000"
-#             - name: PGID
-#               value: "1000"
-#             - name: serverIP
-#               value: tdarr-server
-#             - name: serverPort
-#               value: "8266"
-#             - name: nodeType
-#               value: mapped
-#             - name: inContainer
-#               value: "true"
-#             - name: ffmpegVersion
-#               value: "7"
-#             - name: nodeName
-#               value: worker2
-#             - name: auth
-#               value: "false"
-#             - name: maxLogSizeMB
-#               value: "10"
-#             - name: pollInterval
-#               value: "2000"
-#             - name: startPaused
-#               value: "false"
-#             - name: transcodecpuWorkers
-#               value: "1"
-#             - name: healthcheckcpuWorkers
-#               value: "1"
-#           volumeMounts:
-#             - name: data
-#               mountPath: /app/configs
-#               subPath: configs/
-#             - name: media
-#               mountPath: /media
-#             - name: tmp
-#               mountPath: /temp
-# ---
-# # Service
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: tdarr
-# spec:
-#   ports:
-#     - port: 80
-#       protocol: TCP
-#       targetPort: http
-#       name: http
-#   selector:
-#     app: tdarr
-#     component: main
-#   type: LoadBalancer
-# ---
-# # Service
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: tdarr-server
-# spec:
-#   ports:
-#     - port: 8266
-#       protocol: TCP
-#       targetPort: server
-#       name: tdarr-server
-#   selector:
-#     app: tdarr
-#     component: main
-#   type: ClusterIP
-# ---
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tdarr-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr
+  namespace: multimedia
+  labels:
+    app: tdarr
+    component: main
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tdarr
+  template:
+    metadata:
+      labels:
+        app: tdarr
+        component: main
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - worker-1
+              - key: app
+                operator: In
+                values:
+                - tdarr
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tdarr-data-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: tdarr
+          resources:
+            requests:
+              gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
+            limits:
+              cpu: 1500m
+          image: ghcr.io/haveagitgat/tdarr:2.46.01
+          ports:
+            - name: http
+              containerPort: 8265
+            - name: server
+              containerPort: 8266
+          env:
+            - name: TZ
+              value: Australia/Sydney
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: serverIP
+              value: tdarr-server
+            - name: serverPort
+              value: "8266"
+            - name: uiPort
+              value: "8265"
+            - name: internalNode
+              value: "true"
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: main
+            - name: auth
+              value: "false"
+            - name: openBrowser
+              value: "true"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: transcodegpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/server
+              subPath: server/
+            - name: data
+              mountPath: /app/configs
+              subPath: configs/
+            - name: media
+              mountPath: /media
+            - name: tmp
+              mountPath: /temp
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr-worker-1
+  namespace: multimedia
+  labels:
+    app: tdarr
+    component: worker-1
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tdarr
+  template:
+    metadata:
+      labels:
+        app: tdarr
+        component: worker-1
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - main
+              - key: app
+                operator: In
+                values:
+                - tdarr
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tdarr-data-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: tdarr
+          resources:
+            requests:
+              gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
+            limits:
+              cpu: 1500m
+          image: ghcr.io/haveagitgat/tdarr_node:2.46.01
+          env:
+            - name: TZ
+              value: Australia/Sydney
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: serverIP
+              value: tdarr-server
+            - name: serverPort
+              value: "8266"
+            - name: nodeType
+              value: mapped
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: worker1
+            - name: auth
+              value: "false"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: pollInterval
+              value: "2000"
+            - name: startPaused
+              value: "false"
+            - name: transcodegpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/configs
+              subPath: configs/
+            - name: media
+              mountPath: /media
+            - name: tmp
+              mountPath: /temp
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdarr
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+      name: http
+  selector:
+    app: tdarr
+    component: main
+  type: LoadBalancer
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdarr-server
+spec:
+  ports:
+    - port: 8266
+      protocol: TCP
+      targetPort: server
+      name: tdarr-server
+  selector:
+    app: tdarr
+    component: main
+  type: ClusterIP
+---
