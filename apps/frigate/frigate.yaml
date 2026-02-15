@@ -4,24 +4,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: frigate-config-pvc
 spec:
-  storageClassName: longhorn-no-replica
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: frigate-data-pvc
-spec:
-  storageClassName: longhorn-no-replica
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
 ---
 # Deployment
 apiVersion: apps/v1
@@ -48,9 +35,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: frigate-config-pvc
-        - name: data
-          persistentVolumeClaim:
-            claimName: frigate-data-pvc
         - name: media
           nfs:
             server: nas.home
