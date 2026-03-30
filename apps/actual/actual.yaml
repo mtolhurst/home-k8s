@@ -52,7 +52,7 @@ spec:
   ports:
     - port: 80
       name: http
-      protocol: tcp
+      protocol: TCP
   selector:
     app: actual
   type: LoadBalancer
