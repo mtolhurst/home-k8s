@@ -53,6 +53,7 @@ spec:
     - port: 80
       name: http
       protocol: TCP
+      targetPort: http
   selector:
     app: actual
   type: LoadBalancer
