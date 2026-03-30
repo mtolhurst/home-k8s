@@ -30,6 +30,9 @@ spec:
       containers:
       - image: docker.io/actualbudget/actual-server:sha-4820331-alpine
         name: actual
+        env:
+          - name: ACTUAL_PORT
+            value: "5006"
         ports:
         - containerPort: 5006
           name: http
