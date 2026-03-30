@@ -30,6 +30,12 @@ spec:
       containers:
       - image: docker.io/actualbudget/actual-server:sha-4820331-alpine
         name: actual
+        env:
+          - name: ACTUAL_HTTPS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: cert
+                key: 
         ports:
         - containerPort: 5006
           name: http
@@ -56,4 +62,33 @@ spec:
       targetPort: http
   selector:
     app: actual
-  type: LoadBalancer
+  type: clusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: actual-ingress
+  namespace: actual
+  annotations:
+    cert-manager.io/cluster-issuer: "selfsignet-issuer"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - actual.home
+      secretName: tls-secret
+  rules:
+    - host: actual.home
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: actual
+                port:
+                  number: 80
+
