@@ -67,7 +67,7 @@ metadata:
   name: actual-ingress
   namespace: actual
   annotations:
-    cert-manager.io/cluster-issuer: "selfsignet-issuer"
+    cert-manager.io/issuer: "selfsigned-issuer"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
