@@ -56,7 +56,7 @@ spec:
       targetPort: http
   selector:
     app: actual
-  type: clusterIP
+  type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
