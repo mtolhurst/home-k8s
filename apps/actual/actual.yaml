@@ -30,12 +30,6 @@ spec:
       containers:
       - image: docker.io/actualbudget/actual-server:sha-4820331-alpine
         name: actual
-        env:
-          - name: ACTUAL_HTTPS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: cert
-                key: 
         ports:
         - containerPort: 5006
           name: http
