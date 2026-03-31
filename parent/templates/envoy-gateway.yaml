@@ -19,7 +19,7 @@ spec:
   project: default
   sources:
     - repoURL: oci://docker.io/envoyproxy/gateway-helm
-      chart: eg
+      path: .
       targetRevision: v1.7.1
       helm:
         valuesObject:
