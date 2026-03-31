@@ -20,7 +20,7 @@ spec:
   sources:
     - repoURL: oci://docker.io/envoyproxy/gateway-helm
       chart: eg
-      targetRevision: 1.7.1
+      targetRevision: v1.7.1
       helm:
         valuesObject:
           service:
