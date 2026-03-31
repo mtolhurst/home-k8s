@@ -60,32 +60,3 @@ spec:
   selector:
     app: actual
   type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: actual-ingress
-  namespace: actual
-  annotations:
-    cert-manager.io/issuer: "selfsigned-issuer"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - actual.home
-      secretName: tls-secret
-  rules:
-    - host: actual.home
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: actual
-                port:
-                  number: 80
-
