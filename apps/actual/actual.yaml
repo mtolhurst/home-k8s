@@ -73,6 +73,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
+      hostname: actual.home
       tls:
         mode: Terminate
         certificateRefs:
