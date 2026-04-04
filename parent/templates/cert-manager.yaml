@@ -27,3 +27,4 @@ spec:
             enabled: true
           config:
             enableGatewayAPI: true          
+            kind: ControllerConfiguration
