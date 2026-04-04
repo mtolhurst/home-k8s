@@ -26,3 +26,5 @@ spec:
         valuesObject:
           service:
             type: LoadBalancer
+    - repoURL: {{ .Values.spec.source.repoURL }}
+      path: infra/envoy-gw

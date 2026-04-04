@@ -25,3 +25,5 @@ spec:
         valuesObject:
           crds:
             enabled: true
+          config:
+            enableGatewayAPI: true          
