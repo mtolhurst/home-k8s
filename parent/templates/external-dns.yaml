@@ -27,20 +27,20 @@ spec:
           aws:
             region: us-east-1
             zoneType: public
-        domainFilters:
-          - k8s.tolly-home.com
-        txtOwnerId: home-k8s
-        policy: sync
-        registry: txt
-        txtPrefix: "extdns."
-        sources:
-          - service
-          - gateway
-        extraVolumes:
-          - name: aws-credentials
-            secret:
-              secretName: external-dns 
-        extraVolumeMounts:
-          - name: aws-credentials
-            mountPath: /etc/aws/credentials
-            readOnly: true
+          domainFilters:
+            - k8s.tolly-home.com
+          txtOwnerId: home-k8s
+          policy: sync
+          registry: txt
+          txtPrefix: "extdns."
+          sources:
+            - service
+            - gateway
+          extraVolumes:
+            - name: aws-credentials
+              secret:
+                secretName: external-dns 
+          extraVolumeMounts:
+            - name: aws-credentials
+              mountPath: /etc/aws/credentials
+              readOnly: true
