@@ -24,9 +24,6 @@ spec:
       helm:
         valuesObject:
           provider: aws
-          aws:
-            region: us-east-1
-            zoneType: public
           domainFilters:
             - k8s.tolly-home.com
           txtOwnerId: home-k8s
@@ -39,6 +36,8 @@ spec:
           env:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /etc/aws/credentials/credentials
+            - name: AWS_DEFAULT_REGION
+              value: us-east-1
           extraVolumes:
             - name: aws-credentials
               secret:
