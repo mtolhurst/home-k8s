@@ -38,7 +38,7 @@ spec:
             - gateway-httproute
           env:
             - name: AWS_SHARED_CREDENTIALS_FILE
-              value: /etc/aws/credentials/my_credentials
+              value: /etc/aws/credentials/credentials
           extraVolumes:
             - name: aws-credentials
               secret:
