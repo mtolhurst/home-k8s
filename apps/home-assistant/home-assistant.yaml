@@ -79,4 +79,44 @@ spec:
       name: http
   selector:
     app: home-assistant
-  type: LoadBalancer
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: ha-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: ha.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: actual-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: ha-gateway
+  hostnames:
+    - ha.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: home-assistant
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
