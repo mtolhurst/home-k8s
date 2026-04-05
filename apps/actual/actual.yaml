@@ -88,7 +88,6 @@ spec:
   parentRefs:
     - name: actual-gateway
   hostnames:
-    - actual.home
     - actual.k8s.tolly-home.com
   rules:
     - backendRefs:
