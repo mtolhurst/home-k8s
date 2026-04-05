@@ -32,3 +32,11 @@ A number of secrets are not stored here, and are required for all apps to work
   * Name: external-dns
   * Requires access to modify route53 hosted zones
   * https://kubernetes-sigs.github.io/external-dns/v0.20.0/docs/tutorials/aws/#create-the-static-credentials
+* Cert manager creds
+  * Name: route53-credentials-secret
+  * Requires route53 txt access
+  * ```
+     kubectl create secret generic route53-credentials-secret -n cert-manager \
+       --from-literal=access-key-id='' \
+       --from-literal=secret-access-key=''
+  ```
