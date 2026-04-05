@@ -42,8 +42,6 @@ spec:
             - name: aws-credentials
               secret:
                 secretName: external-dns 
-          extraArgs:
-            - --fqdn-template={{.Name}}.k8s.tolly-home.com
           extraVolumeMounts:
             - name: aws-credentials
               mountPath: /etc/aws/credentials
