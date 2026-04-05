@@ -28,3 +28,11 @@ A number of secrets are not stored here, and are required for all apps to work
        --from-literal=ACCESS_KEY_ID=<key id>\
        --from-literal=ACCESS_SECRET_KEY=<secret key>
     ```
+* ExternalDNS credentials
+  * Name: external-dns
+  * Requires access to modify route53 hosted zones
+  * ```
+    kubectl create secret generic external-dns -n external-dns \
+     --from-literal=aws_access_key_id=<key_id> \
+     --from-literal=aws_secret_access_key=<secret_key> 
+  ```
