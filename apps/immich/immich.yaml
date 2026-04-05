@@ -187,5 +187,45 @@ spec:
   selector:
     app: immich
   sessionAffinity: None
-  type: LoadBalancer
+  type: ClusterIP
 
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: immich-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: immich.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: immich-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: immich-gateway
+  hostnames:
+    - immic.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: immich
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
