@@ -217,7 +217,7 @@ spec:
   parentRefs:
     - name: immich-gateway
   hostnames:
-    - immic.k8s.tolly-home.com
+    - immich.k8s.tolly-home.com
   rules:
     - backendRefs:
         - group: ""
