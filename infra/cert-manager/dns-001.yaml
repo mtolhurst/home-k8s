@@ -4,7 +4,7 @@ metadata:
   name: dns-issuer
 spec:
   acme:
-    email: user@example.com
+    email: lets_encrypt@tolly-home.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: dns-acme-account-key
