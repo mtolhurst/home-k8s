@@ -73,7 +73,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: actual.home
+      hostname: actual.k8s.tolly-home.com
       tls:
         mode: Terminate
         certificateRefs:
@@ -88,7 +88,8 @@ spec:
   parentRefs:
     - name: actual-gateway
   hostnames:
-    - "actual.home"
+    - actual.home
+    - actual.k8s.tolly-home.com
   rules:
     - backendRefs:
         - group: ""
