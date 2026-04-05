@@ -35,7 +35,7 @@ spec:
           txtPrefix: "extdns."
           sources:
             - service
-            - gateway
+            - gateway-httproute
           extraVolumes:
             - name: aws-credentials
               secret:
