@@ -65,7 +65,7 @@ spec:
             - name: PAPERLESS_PORT
               value: "8000"
             - name: PAPERLESS_URL
-              value: http://paperless.home
+              value: https://docs.k8s.tolly-home.com
             - name: PAPERLESS_DBHOST
               valueFrom:
                 secretKeyRef:
