@@ -100,7 +100,7 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: mealie-pg-cluster-superuser
+                  name: mealie-pg-cluster-app
                   key: dbname
 ---
 # Service
