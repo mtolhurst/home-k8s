@@ -33,12 +33,6 @@ spec:
         app: lube-logger
     spec:
       volumes:
-#        - name: config-ro # TODO add this if config changes
-#          secret:
-#            secretName: lubelogger-config-secret
-#            items:
-#              - key: userConfig
-#                path: userConfig.json
         - name: translations
           emptyDir: {}
         - name: config
@@ -103,5 +97,45 @@ spec:
   selector:
     app: lube-logger
   sessionAffinity: None
-  type: LoadBalancer
+  type: ClusterIP
 
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: lubelogger-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: lubelogger.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: lubelogger-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: lubelogger-gateway
+  hostnames:
+    - lubelogger.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: lube-logger
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
