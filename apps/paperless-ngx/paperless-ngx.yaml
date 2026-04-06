@@ -71,6 +71,8 @@ spec:
                 secretKeyRef:
                   name: paperless-pg-cluster-app
                   key: host
+            - name: PAPERLESS_FILENAME_FORMAT
+              value: '{{ document_type }}/{{ title }}--{{ doc-pk }}'
             - name: PAPERLESS_DBUSER
               valueFrom:
                 secretKeyRef:
