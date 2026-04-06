@@ -84,22 +84,22 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: mealie-pg-cluster-superuser
+                  name: mealie-pg-cluster-app
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mealie-pg-cluster-superuser
+                  name: mealie-pg-cluster-app
                   key: password
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
-                  name: mealie-pg-cluster-superuser
+                  name: mealie-pg-cluster-app
                   key: port
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: mealie-pg-cluster-superuser
+                  name: mealie-pg-cluster-app
                   key: dbname
 ---
 # Service
