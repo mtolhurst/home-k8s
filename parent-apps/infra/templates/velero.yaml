@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io 
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated: 
+      prune: true 
+      selfHeal: true
+      allowEmpty: false 
+  destination:
+    namespace: velero
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  sources:
+    - chart: velero
+      repoURL: https://vmware-tanzu.github.io/helm-charts
+      targetRevision: 12.0.1
+      helm:
+        valuesObject:
+          schedules:
+            daily-tagged-pvc-backup:
+              schedule: "0 1 * * *" # Daily at 1:00 AM
+              template:
+                includedResources:
+                  - persistentvolumeclaims
+                  - persistentvolumes
+                labelSelector:
+                  matchLabels:
+                    backup: "daily"
+                snapshotVolumes: true
+                ttl: 720h0m0s # Retain for 30 days
+          credentials:
+            useSecret: true
+            secretContents:
+              cloud: |
+                [default]
+                aws_access_key_id = admin
+                aws_secret_access_key = admin
+          initContainers:
+            - name: velero-plugin-for-aws
+              image: velero/velero-plugin-for-aws:v1.9.0
+            - name: velero-plugin-for-csi
+              image: velero/velero-plugin-for-csi:v0.7.0
+          configuration:
+            provider: aws 
+            features: EnableCSI 
+            backupStorageLocation:
+              - name: default
+                bucket: velero
+                config:
+                  region: verity
+                  s3ForcePathStyle: true
+                  s3Url: http://veritygw.verity
