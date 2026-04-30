@@ -24,7 +24,7 @@ spec:
             path: /mnt/nas/s3
       containers:
         - name: versity
-          image: docker pull ghcr.io/versity/versitygw:v1.4.1
+          image: ghcr.io/versity/versitygw:v1.4.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: api
