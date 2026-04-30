@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: versity-gw
+  name: versitygw
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io 
@@ -14,7 +14,7 @@ spec:
       selfHeal: true
       allowEmpty: false 
   destination:
-    namespace: versity
+    namespace: versitygw
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
