@@ -56,7 +56,6 @@ spec:
             - name: velero-plugin-for-csi
               image: velero/velero-plugin-for-csi:v0.7.0
           configuration:
-            provider: aws 
             features: EnableCSI 
             backupStorageLocation:
               - name: default
