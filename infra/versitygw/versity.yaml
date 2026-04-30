@@ -34,9 +34,9 @@ spec:
             - name: data
               mountPath: /data
           env:
-            - name: VGW_ACCESS_KEY
+            - name: ROOT_ACCESS_KEY
               value: admin
-            - name: VGW_SECRET_KEY
+            - name: ROOT_SECRET_KEY
               value: admin
             - name: VGW_BACKEND
               value: posix
