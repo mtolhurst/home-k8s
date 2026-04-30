@@ -59,11 +59,11 @@ spec:
           configuration:
             features: EnableCSI 
             volumeSnapshotLocations:
-              - name: verify-gateway
+              - name: default
                 spec:
                   provider: aws
             backupStorageLocation:
-              - name: verity-gateway
+              - name: default
                 provider: aws
                 bucket: velero
                 config:
