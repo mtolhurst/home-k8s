@@ -70,5 +70,5 @@ spec:
                 config:
                   region: verity
                   s3ForcePathStyle: true
-                  s3Url: http://verity
+                  s3Url: http://verity.veritygw.svc.cluster.local
             
