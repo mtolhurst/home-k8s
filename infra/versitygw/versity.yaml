@@ -39,7 +39,7 @@ spec:
             - name: VGW_SECRET_KEY
               value: admin
             - name: VGW_BACKEND
-              value: postix
+              value: posix
             - name: VGW_BACKEND_ARGS
               value: /data
 ---
