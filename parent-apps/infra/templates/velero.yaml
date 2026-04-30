@@ -58,10 +58,11 @@ spec:
                   name: plugins
           configuration:
             features: EnableCSI 
-            volumeSnapshotLocations:
+            volumeSnapshotLocation:
               - name: default
-                spec:
-                  provider: aws
+                provider: aws  
+                config:
+                  region: verity
             backupStorageLocation:
               - name: default
                 provider: aws
