@@ -62,13 +62,13 @@ spec:
               - name: default
                 provider: aws  
                 config:
-                  region: verity
+                  region: us-east-1
             backupStorageLocation:
               - name: default
                 provider: aws
                 bucket: velero
                 config:
-                  region: verity
+                  region: us-east-1
                   s3ForcePathStyle: true
                   s3Url: http://s3-gw.versitygw.svc.cluster.local
             
