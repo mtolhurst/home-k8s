@@ -59,7 +59,7 @@ spec:
           configuration:
             features: EnableCSI 
             backupStorageLocation:
-              - name: default
+              - name: verity-gateway
                 provider: aws
                 bucket: velero
                 config:
