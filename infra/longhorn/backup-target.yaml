@@ -1,9 +1,0 @@
-apiVersion: longhorn.io/v1beta2
-kind: BackupTarget
-metadata:
-  name: nfs-nas-backup-target  
-  namespace: longhorn-system
-spec:
-  backupTargetURL: "nfs://nas.home:/mnt/nas/backups/longhorn"
-  credentialSecret: "" 
-  pollInterval: 5m0s # How often Longhorn checks the backup target for new backups

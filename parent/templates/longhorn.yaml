@@ -36,6 +36,8 @@ spec:
       targetRevision: 1.11.1
       helm:
         valuesObject:
+          defaultSettings:
+            backupTarget: "nfs://nas.home:/mnt/nas/backups/longhorn"
           service:
             ui:
               type: LoadBalancer
