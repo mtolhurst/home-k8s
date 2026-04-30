@@ -3,6 +3,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: actual-pvc
+  labels:
+    backup: daily
 spec:
   accessModes:
     - ReadWriteMany
