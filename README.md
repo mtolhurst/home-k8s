@@ -40,3 +40,13 @@ A number of secrets are not stored here, and are required for all apps to work
        --from-literal=access-key-id='' \
        --from-literal=secret-access-key=''
   ```
+
+# TODO
+* Move to local git
+* Move stuff to parent app
+* Get all apps using externalDNS
+  * Move everything we can behind envoy gateway with a cert
+* Get backups working properly
+* Test backups
+* Do full restore test
+

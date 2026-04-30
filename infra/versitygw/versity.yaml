@@ -1,0 +1,60 @@
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versitygw
+  namespace: versitygw
+  labels:
+    app: versitygw
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: versitygw
+  template:
+    metadata:
+      labels:
+        app: versitygw
+    spec:
+      volumes:
+        - name: data
+          nfs:
+            server: nas.home
+            path: /mnt/nas/s3
+      containers:
+        - name: versity
+          image: docker pull ghcr.io/versity/versitygw:v1.4.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: api
+              containerPort: 7070
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          env:
+            - name: VGW_ACCESS_KEY
+              value: admin
+            - name: VGW_SECRET_KEY
+              value: admin
+            - name: VGW_BACKEND
+              value: postix
+            - name: VGW_BACKEND_ARGS
+              value: /data
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3-gw
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: api
+  selector:
+    app: versitygw
+  sessionAffinity: None
+  type: ClusterIP
+
