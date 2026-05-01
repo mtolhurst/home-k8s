@@ -36,6 +36,9 @@ spec:
       targetRevision: 1.11.1
       helm:
         valuesObject:
+          defaultSettings:
+            backupTarget: s3://velero@us-east-1/
+            backupTargetCredentialSecret: versity-secret
           service:
             ui:
               type: LoadBalancer
