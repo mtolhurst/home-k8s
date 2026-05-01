@@ -33,7 +33,7 @@ spec:
         valuesObject:
           schedules:
             daily-tagged-pvc-backup:
-              schedule: "0 1 * * *" # Daily at 1:00 AM
+              schedule: "0 13 * * *" # Daily at 11-12pm, depending on DST sydney time
               template:
                 includedResources:
                   - persistentvolumeclaims
