@@ -70,5 +70,5 @@ spec:
                 config:
                   region: us-east-1
                   s3ForcePathStyle: true
-                  s3Url: http://s3-gw
+                  s3Url: http://s3-gw.versitygw.svc.cluster.local
             
