@@ -42,7 +42,6 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-            sizeLimit: 1Gi
       initContainers:
         - name: copyconfig
           image: 
@@ -71,7 +70,7 @@ spec:
               add: ["PERFMON"]
           resources:
             requests:
-              memory: 512Mi
+              memory: 1Gi
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
               gpu.intel.com/i915: 1 
