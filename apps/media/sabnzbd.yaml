@@ -50,10 +50,12 @@ spec:
             httpGet:
               path: /
               port: http
+            failureThreshold: 10
           readinessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 10
           env:
             - name: PUID
               value: "1000"
