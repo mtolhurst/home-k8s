@@ -14,7 +14,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nzbget
+  name: sabnzbd
   namespace: multimedia
   labels:
     app: sabnzbd
@@ -33,7 +33,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: nzbget-config-pvc
+            claimName: sabnzbd-config-pvc
         - name: tmp
           persistentVolumeClaim:
             claimName: media-tmp-pvc
