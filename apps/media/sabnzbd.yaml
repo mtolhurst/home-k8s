@@ -2,38 +2,40 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sabnzbd-config-pvc
+  name: nzbget-config-pvc
+  labels:
+    backup: daily
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 4Gi
+      storage: 1Gi
 ---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sabnzbd
+  name: nzbget
   namespace: multimedia
   labels:
-    app: sabnzbd
+    app: nzbget
 spec:
   strategy:
     type: Recreate
   replicas: 1
   selector:
     matchLabels:
-      app: sabnzbd
+      app: nzbget
   template:
     metadata:
       labels:
-        app: sabnzbd
+        app: nzbget
     spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: sabnzbd-config-pvc
+            claimName: nzbget-config-pvc
         - name: tmp
           persistentVolumeClaim:
             claimName: media-tmp-pvc
@@ -41,11 +43,11 @@ spec:
           emptyDir:
             sizeLimit: 50Gi
       containers:
-        - name: sabnzbd
-          image: lscr.io/linuxserver/sabnzbd:5.0.1
+        - name: nzbget
+          image: lscr.io/linuxserver/nzbget:26.1.20260501
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 6789
           env:
             - name: PUID
               value: "1000"
@@ -57,16 +59,16 @@ spec:
             - name: config
               mountPath: /config
             - name: intermediate
-              mountPath: /incomplete-downloads
+              mountPath: /intermediate
             - name: tmp
-              mountPath: /downloads
+              mountPath: /complete
               subPath: complete
 ---
 # Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: sabnzbd
+  name: nzbget
 spec:
   ports:
     - port: 80
@@ -74,7 +76,7 @@ spec:
       targetPort: http
       name: http
   selector:
-    app: sabnzbd
+    app: nzbget
   type: ClusterIP
 ---
 
@@ -83,7 +85,7 @@ kind: Gateway
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: dns-issuer
-  name: sabnzbd-gateway
+  name: nzbget-gateway
 spec:
   gatewayClassName: eg
   listeners:
@@ -95,7 +97,7 @@ spec:
         mode: Terminate
         certificateRefs:
         - kind: Secret
-          name: sabnzbd-https
+          name: nzbget-https
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -103,14 +105,14 @@ metadata:
   name: backend-nzb
 spec:
   parentRefs:
-    - name: sabnzbd-gateway
+    - name: nzbget-gateway
   hostnames:
     - nzb.k8s.tolly-home.com
   rules:
     - backendRefs:
         - group: ""
           kind: Service
-          name: sabnzbd
+          name: nzbget
           port: 80
           weight: 1
       matches:
