@@ -40,7 +40,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: versity-secret
-  namespace: cnpg-system
+  namespace: immich
 type: Opaque
 data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
