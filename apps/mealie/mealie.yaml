@@ -1,17 +1,4 @@
 ---
-# Create a postgres 15 db
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: mealie-pg-cluster
-spec:
-  instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:15
-  enableSuperuserAccess: true
-  storage:
-    size: 2Gi
-
----
 # PVC for mealie data not in pg
 apiVersion: v1
 kind: PersistentVolumeClaim

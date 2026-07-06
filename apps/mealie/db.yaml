@@ -1,0 +1,44 @@
+---
+# Create a postgres 15 db
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mealie-pg-cluster
+spec:
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://cnpg-backups/mealie/
+      endpointURL: http://s3-gw.versitygw.svc.cluster.local
+      s3Credentials:
+        accessKeyId:
+          name: versity-secret
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: versity-secret
+          key: AWS_SECRET_ACCESS_KEY
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:15
+  enableSuperuserAccess: true
+  storage:
+    size: 2Gi
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: backup-example
+spec:
+  schedule: "0 0 0 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: mealie-pg-cluster
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: versity-secret
+  namespace: mealie
+type: Opaque
+data:
+  AWS_ACCESS_KEY_ID: YWRtaW4=
+  AWS_SECRET_ACCESS_KEY: YWRtaW4= 
+
