@@ -1,14 +1,4 @@
 ---
-# TODO prometheus monitoring
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: paperless-pg-cluster
-spec:
-  instances: 1
-  storage:
-    size: 5Gi
----
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
