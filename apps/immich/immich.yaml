@@ -73,12 +73,12 @@ spec:
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-pg-cluster-superuser
+                  name: immich-pg-cluster-app
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: immich-pg-cluster-superuser
+                  name: immich-pg-cluster-app
                   key: password
             - name: DB_PORT
               valueFrom:

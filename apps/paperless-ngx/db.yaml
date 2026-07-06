@@ -5,31 +5,9 @@ kind: Cluster
 metadata:
   name: paperless-pg-cluster
 spec:
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://cnpg-backups/paperless/
-      endpointURL: http://s3-gw.versitygw.svc.cluster.local
-      s3Credentials:
-        accessKeyId:
-          name: versity-secret
-          key: AWS_ACCESS_KEY_ID
-        secretAccessKey:
-          name: versity-secret
-          key: AWS_SECRET_ACCESS_KEY
   instances: 1
   storage:
     size: 5Gi
----
----
-apiVersion: postgresql.cnpg.io/v1
-kind: ScheduledBackup
-metadata:
-  name: backup-example
-spec:
-  schedule: "0 0 0 * * *"
-  backupOwnerReference: self
-  cluster:
-    name: paperless-pg-cluster
 ---
 apiVersion: v1
 kind: Secret
