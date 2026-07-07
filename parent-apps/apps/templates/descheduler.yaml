@@ -22,21 +22,23 @@ spec:
       repoURL: https://kubernetes-sigs.github.io/descheduler/
       targetRevision: 0.36.0
       helm:
-        valuesObject:
-          kind: CronJob
-          # Schedule to run every 30 minutes
-          cronJobSchedule: "*/30 * * * *"
-          # Configure the Descheduler policy
-          deschedulerPolicy:
-            strategies:
-              "LowNodeUtilization":
-                enabled: true
-                params:
-                  nodeResourceUtilizationThresholds:
+        kind: CronJob
+        cronJobSchedule: "*/30 * * * *"
+        deschedulerPolicy:
+          apiVersion: "descheduler/v1v1"
+          kind: "DeschedulerPolicy"
+          profiles:
+            - name: DefaultProfile
+              plugins:
+                balance:
+                  enabled:
+                    - "LowNodeUtilization"
+              pluginConfig:
+                - name: "LowNodeUtilization"
+                  args:
                     thresholds:
                       "cpu": 35
                       "memory": 35
                     targetThresholds:
                       "cpu": 50
                       "memory": 50
-
