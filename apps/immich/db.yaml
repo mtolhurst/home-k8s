@@ -16,18 +16,19 @@ spec:
     size: 2Gi
   bootstrap:
     recovery:
-      source: source
-  externalClusters:
-  - name: source
-    plugin:
-      name: barman-cloud.cloudnative-pg.io
-      parameters:
-        barmanObjectName: versity-store
-        serverName: immich-pg-cluster
-    # initdb:
-    #   postInitApplicationSQL:
-    #     - CREATE EXTENSION IF NOT EXISTS vector
-    #     - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+      source: immich-pg-cluster
+  # # Uncomment this, and comment out the spec.plugins block to restore from backup
+  # externalClusters:
+  # - name: immich-pg-cluster
+  #   plugin:
+  #     name: barman-cloud.cloudnative-pg.io
+  #     parameters:
+  #       barmanObjectName: versity-store
+  #       serverName: immich-pg-cluster
+    initdb:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
 ---
 apiVersion: v1
 kind: Secret
@@ -38,4 +39,31 @@ type: Opaque
 data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
   AWS_SECRET_ACCESS_KEY: YWRtaW4= 
-
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: versity-secret
+  namespace: immich
+type: Opaque
+data:
+  AWS_ACCESS_KEY_ID: YWRtaW4=
+  AWS_SECRET_ACCESS_KEY: YWRtaW4= 
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: versity-store
+spec:
+  configuration:
+    destinationPath: s3://cnpg-backups/immich/
+    endpointURL: http://s3-gw.versitygw.svc.cluster.local
+    s3Credentials:
+      accessKeyId:
+        name: versity-secret
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: versity-secret
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
