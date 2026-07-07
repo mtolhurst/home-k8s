@@ -40,16 +40,6 @@ data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
   AWS_SECRET_ACCESS_KEY: YWRtaW4= 
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: versity-secret
-  namespace: immich
-type: Opaque
-data:
-  AWS_ACCESS_KEY_ID: YWRtaW4=
-  AWS_SECRET_ACCESS_KEY: YWRtaW4= 
----
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
