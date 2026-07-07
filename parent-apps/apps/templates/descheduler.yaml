@@ -24,7 +24,7 @@ spec:
       helm:
         valuesObject:
           kind: CronJob
-          cronJobSchedule: "*/30 * * * *"
+          schedule: "*/30 * * * *" 
           deschedulerPolicy:
             apiVersion: "descheduler/v1alpha2"
             kind: "DeschedulerPolicy"
