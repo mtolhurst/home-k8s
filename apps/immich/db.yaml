@@ -15,9 +15,13 @@ spec:
   storage:
     size: 2Gi
   bootstrap:
-    recovery:
-      source: immich-pg-cluster
+    initdb:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
   # # Uncomment this, and comment out the spec.plugins block to restore from backup
+    # recovery:
+    #   source: immich-pg-cluster
   # externalClusters:
   # - name: immich-pg-cluster
   #   plugin:
@@ -25,10 +29,6 @@ spec:
   #     parameters:
   #       barmanObjectName: versity-store
   #       serverName: immich-pg-cluster
-    initdb:
-      postInitApplicationSQL:
-        - CREATE EXTENSION IF NOT EXISTS vector
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
 ---
 apiVersion: v1
 kind: Secret
