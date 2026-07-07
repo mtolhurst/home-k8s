@@ -15,10 +15,19 @@ spec:
   storage:
     size: 2Gi
   bootstrap:
-    initdb:
-      postInitApplicationSQL:
-        - CREATE EXTENSION IF NOT EXISTS vector
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+    recovery:
+      source: source
+  externalClusters:
+  - name: source
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: versity-store
+        serverName: immich-pg-cluster
+    # initdb:
+    #   postInitApplicationSQL:
+    #     - CREATE EXTENSION IF NOT EXISTS vector
+    #     - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
 ---
 apiVersion: v1
 kind: Secret
