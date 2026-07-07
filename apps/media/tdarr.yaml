@@ -3,12 +3,14 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: tdarr-data-pvc
+  labels:
+    backup: daily
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
