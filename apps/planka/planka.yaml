@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 ---
 # Create a postgres db
 apiVersion: postgresql.cnpg.io/v1
@@ -21,7 +21,7 @@ spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:16
   storage:
-    size: 10Gi
+    size: 1Gi
 
 ---
 # Deployment
