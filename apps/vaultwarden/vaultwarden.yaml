@@ -1,4 +1,17 @@
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vaultwarden-pvc
+  labels:
+    backup: daily
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -18,7 +31,9 @@ spec:
         app: vaultwarden
     spec:
       volumes:
-        - name: cache
+        - name: data
+          persistentVolumeClaim:
+            claimName: vaultwarden-pvc
       containers:
         - name: vaultwarden
           image: vaultwarden/server:1.36.0-alpine
