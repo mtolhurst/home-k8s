@@ -1,0 +1,69 @@
+---
+# Create a postgres 15 db with pgvector extension
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: vaultwarden-pg-cluster
+spec:
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: versity-store
+  instances: 1
+  imageName: ghcr.io/mtolhurst/postgresql:15.3-pgvector@sha256:e9c502da08471b5cf1e48290c8624fdc8cee50a9aa370f83f5d357a2470ad00f
+  storage:
+    size: 2Gi
+  bootstrap:
+    initdb:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
+  # # Uncomment this, and comment out the spec.plugins block to restore from backup
+    # recovery:
+    #   source: vaultwarden-pg-cluster
+  # externalClusters:
+  # - name: vaultwarden-pg-cluster
+  #   plugin:
+  #     name: barman-cloud.cloudnative-pg.io
+  #     parameters:
+  #       barmanObjectName: versity-store
+  #       serverName: vaultwarden-pg-cluster
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: versity-secret
+  namespace: vaultwarden
+type: Opaque
+data:
+  AWS_ACCESS_KEY_ID: YWRtaW4=
+  AWS_SECRET_ACCESS_KEY: YWRtaW4= 
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: versity-store
+spec:
+  configuration:
+    destinationPath: s3://cnpg-backups/vaultwarden/
+    endpointURL: http://s3-gw.versitygw.svc.cluster.local
+    s3Credentials:
+      accessKeyId:
+        name: versity-secret
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: versity-secret
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: daily-backup
+spec:
+  schedule: "0 0 0 * * *"  # At midnight every day
+  backupOwnerReference: self
+  cluster:
+    name: vaultwarden-pg-cluster
