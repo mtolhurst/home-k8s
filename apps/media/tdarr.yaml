@@ -55,6 +55,7 @@ spec:
                 operator: In
                 values:
                 - worker-1
+                - worker-2
               - key: app
                 operator: In
                 values:
@@ -161,6 +162,7 @@ spec:
                 operator: In
                 values:
                 - main
+                - worker-2
               - key: app
                 operator: In
                 values:
@@ -205,6 +207,105 @@ spec:
               value: "7"
             - name: nodeName
               value: worker1
+            - name: auth
+              value: "false"
+            - name: maxLogSizeMB
+              value: "10"
+            - name: pollInterval
+              value: "2000"
+            - name: startPaused
+              value: "false"
+            - name: transcodegpuWorkers
+              value: "1"
+            - name: transcodecpuWorkers
+              value: "1"
+            - name: healthcheckcpuWorkers
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/configs
+              subPath: configs/
+            - name: media
+              mountPath: /media
+            - name: tmp
+              mountPath: /temp
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr-worker-2
+  namespace: multimedia
+  labels:
+    app: tdarr
+    component: worker-2
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tdarr
+  template:
+    metadata:
+      labels:
+        app: tdarr
+        component: worker-2
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - main
+                - worker-1
+              - key: app
+                operator: In
+                values:
+                - tdarr
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tdarr-data-pvc
+        - name: media
+          nfs:
+            server: nas.home
+            path: /mnt/nas/media
+            readonly: false
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: tdarr-cache-pvc
+      containers:
+        - name: tdarr
+          resources:
+            requests:
+              gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
+            limits:
+              gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
+          image: ghcr.io/haveagitgat/tdarr_node:2.82.02
+          env:
+            - name: TZ
+              value: Australia/Sydney
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: serverIP
+              value: tdarr-server
+            - name: serverPort
+              value: "8266"
+            - name: nodeType
+              value: mapped
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "7"
+            - name: nodeName
+              value: worker2
             - name: auth
               value: "false"
             - name: maxLogSizeMB
