@@ -62,6 +62,8 @@ metadata:
 spec:
   schedule: "0 0 0 * * *"  # At midnight every day
   method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   backupOwnerReference: self
   cluster:
     name: mealie-pg-cluster
