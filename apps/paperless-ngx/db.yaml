@@ -60,6 +60,7 @@ metadata:
   name: daily-backup
 spec:
   schedule: "0 0 0 * * *"  # At midnight every day
+  immediate: true
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:
