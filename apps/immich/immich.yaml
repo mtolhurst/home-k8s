@@ -91,7 +91,7 @@ spec:
                   name: immich-pg-cluster-app
                   key: dbname
         - name: immich-server
-          image: ghcr.io/immich-app/immich-server:v3.0.1
+          image: ghcr.io/immich-app/immich-server:v3.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
