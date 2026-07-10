@@ -78,7 +78,6 @@ spec:
             requests:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
-              cpu: 1500m
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
           image: ghcr.io/haveagitgat/tdarr:2.82.02
           ports:
@@ -185,7 +184,6 @@ spec:
             requests:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
-              cpu: 1500m
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
           image: ghcr.io/haveagitgat/tdarr_node:2.82.02
           env:
