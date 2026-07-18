@@ -5,28 +5,13 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     backup: daily
-  name: ha-pvc
-spec:
-  storageClassName: longhorn-no-replica
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
----
-# PVC for config
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    backup: daily
   name: home-assistant-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 3Gi
 ---
 # Deployment
 apiVersion: apps/v1
