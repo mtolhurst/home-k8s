@@ -22,9 +22,6 @@ metadata:
     backup: daily
   name: home-assistant-pvc
 spec:
-  dataSource:
-    name: ha-pvc
-    kind: PersistentVolumeClaim
   accessModes:
     - ReadWriteOnce
   resources:
@@ -54,7 +51,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: ha-pvc
+            claimName: home-assistant-pvc
         - name: backup
           nfs:
             server: nas.home
