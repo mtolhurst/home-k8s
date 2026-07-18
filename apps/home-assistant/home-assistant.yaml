@@ -7,7 +7,6 @@ metadata:
     backup: daily
   name: ha-pvc
 spec:
-  storageClassName: longhorn-no-replica
   accessModes:
     - ReadWriteOnce
   resources:
