@@ -39,7 +39,7 @@ spec:
             claimName: home-assistant-pvc
         - name: backup
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/backups/home-assistant
       initContainers:
         - name: ha-init

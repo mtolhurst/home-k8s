@@ -37,7 +37,7 @@ spec:
             claimName: frigate-config-pvc
         - name: media
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/cameras
         - name: dshm
           emptyDir:

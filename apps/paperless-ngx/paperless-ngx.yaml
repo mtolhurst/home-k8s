@@ -22,7 +22,7 @@ spec:
       volumes:
         - name: data
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/documents
             readonly: false
       containers:

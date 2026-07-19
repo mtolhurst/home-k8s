@@ -67,7 +67,7 @@ spec:
             claimName: tdarr-data-pvc
         - name: media
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/media
             readonly: false
         - name: tmp
@@ -174,7 +174,7 @@ spec:
             claimName: tdarr-data-pvc
         - name: media
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/media
             readonly: false
         - name: tmp
@@ -273,7 +273,7 @@ spec:
 #             claimName: tdarr-data-pvc
 #         - name: media
 #           nfs:
-#             server: nas.home
+#             server: nas.kube.home
 #             path: /mnt/nas/media
 #             readonly: false
 #         - name: tmp

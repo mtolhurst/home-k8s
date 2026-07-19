@@ -38,7 +38,7 @@ spec:
             claimName: radarr-pvc
         - name: media
           nfs:
-            server: nas.home
+            server: nas.kube.home
             path: /mnt/nas/media
             readonly: false
         - name: tmp
