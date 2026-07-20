@@ -80,7 +80,7 @@ spec:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
-          image: ghcr.io/haveagitgat/tdarr:2.83.01
+          image: ghcr.io/haveagitgat/tdarr:2.84.01
           ports:
             - name: http
               containerPort: 8265
