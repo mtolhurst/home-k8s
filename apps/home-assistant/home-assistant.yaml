@@ -43,7 +43,7 @@ spec:
             path: /mnt/nas/backups/home-assistant
       initContainers:
         - name: ha-init
-          image: homeassistant/home-assistant:2026.7.2
+          image: homeassistant/home-assistant:2026.7.3
           command: ["sh", "-c", "wget -O - https://get.hacs.xyz | bash -"]
           imagePullPolicy: IfNotPresent
           volumeMounts:
@@ -53,7 +53,7 @@ spec:
               mountPath: /config/backups
       containers:
         - name: ha
-          image: homeassistant/home-assistant:2026.7.2
+          image: homeassistant/home-assistant:2026.7.3
           resources:
             requests:
               memory: 256Mi
