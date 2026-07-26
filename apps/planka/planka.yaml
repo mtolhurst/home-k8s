@@ -79,7 +79,7 @@ spec:
               subPath: attachments
           env:
             - name: BASE_URL
-              value: http://planka.home
+              value: https://planka.k8s.tolly-home.com
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
