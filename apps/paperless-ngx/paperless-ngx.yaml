@@ -27,7 +27,7 @@ spec:
             readonly: false
       containers:
         - name: broker
-          image: redis:8.8.1-alpine
+          image: redis:8.10.0-alpine
           imagePullPolicy: IfNotPresent
         - name: webserver
           image: ghcr.io/paperless-ngx/paperless-ngx:3.0.4
