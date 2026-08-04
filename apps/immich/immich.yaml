@@ -30,7 +30,7 @@ spec:
             sizeLimit: 1Gi
       containers:
         - name: redis
-          image: redis:8.8-alpine
+          image: redis:8.10-alpine
           imagePullPolicy: IfNotPresent
           ports:
             - name: redis
