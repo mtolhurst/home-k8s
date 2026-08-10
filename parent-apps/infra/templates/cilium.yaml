@@ -26,7 +26,6 @@ spec:
       helm:
         valuesObject:
           routingMode: native
-          tunnelProtocol: none
           ipv4NativeRoutingCIDR: "10.244.0.0/16" # <-- Replace with the podSubnets output found above
           autoDirectNodeRoutes: true
           # Talos specific path adjustments
