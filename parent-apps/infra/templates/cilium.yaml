@@ -18,9 +18,9 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
-	- chart: cilium
-	  repoURL: https://cilium.io
-	  targetRevision: 1.20.0
+    - chart: cilium
+      repoURL: https://cilium.io
+      targetRevision: 1.20.0
       helm:
         valuesObject:
           # Talos specific path adjustments
