@@ -26,7 +26,7 @@ spec:
       helm:
         valuesObject:
           routingMode: native
-          ipv4NativeRoutingCIDR: "10.244.0.0/16" # <-- Replace with the podSubnets output found above
+          ipv4NativeRoutingCIDR: "10.244.0.0/16"
           autoDirectNodeRoutes: true
           # Talos specific path adjustments
           cgroup:
@@ -39,6 +39,10 @@ spec:
             capabilities:
               ciliumAgent: [NET_ADMIN, NET_RAW, IPC_LOCK, SYS_ADMIN, SYS_RESOURCE, DAC_OVERRIDE, FOWNER, SETGID, SETUID, CHOWN, KILL]
               cleanCiliumState: [NET_ADMIN, SYS_ADMIN, SYS_RESOURCE]
+          bpf:
+            hostRouting: true
+            masquerade: true
+          enableIPv4Masquerade: true
 
           # Complete Kube-Proxy replacement configuration
           kubeProxyReplacement: true
