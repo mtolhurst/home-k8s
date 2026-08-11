@@ -49,7 +49,6 @@ spec:
             medium: Memory
       initContainers:
         - name: copyconfig
-          image: 
           image: ghcr.io/blakeblackshear/frigate:0.17.2
           volumeMounts:
             - mountPath: /config.yml
