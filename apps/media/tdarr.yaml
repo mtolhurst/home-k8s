@@ -42,6 +42,9 @@ spec:
       app: tdarr
   template:
     metadata:
+      annotations:
+        kubernetes.io/ingress-bandwidth: "20M"
+        kubernetes.io/egress-bandwidth: "10M"
       labels:
         app: tdarr
         component: main
@@ -150,6 +153,9 @@ spec:
 #       app: tdarr
 #   template:
 #     metadata:
+#       annotations:
+#         kubernetes.io/ingress-bandwidth: "20M"
+#         kubernetes.io/egress-bandwidth: "10M"
 #       labels:
 #         app: tdarr
 #         component: worker-1
@@ -249,6 +255,9 @@ spec:
 #       app: tdarr
 #   template:
 #     metadata:
+#       annotations:
+#         kubernetes.io/ingress-bandwidth: "20M"
+#         kubernetes.io/egress-bandwidth: "10M"
 #       labels:
 #         app: tdarr
 #         component: worker-2
