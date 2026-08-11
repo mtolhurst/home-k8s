@@ -17,6 +17,7 @@ spec:
         - /spec/preserveUnknownFields
   syncPolicy:
     syncOptions:
+      - SkipDryRunOnMissingResource=true
       - CreateNamespace=true
     automated: 
       prune: true 
