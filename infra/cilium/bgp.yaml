@@ -52,4 +52,4 @@ spec:
           - LoadBalancerIP
       selector:
         matchExpressions:
-          - {key: io.cilium/lb-managed, operator: Exists}
+          - {key: somekey, operator: NotIn, values: ["never-used-value"]}
