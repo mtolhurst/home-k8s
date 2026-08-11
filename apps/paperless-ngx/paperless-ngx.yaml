@@ -52,6 +52,8 @@ spec:
           env: 
             - name: PAPERLESS_REDIS
               value: redis://127.0.0.1:6379
+            - name: PAPERLESS_SECRET_KEY
+              value: e11fl1oa-*ytql8p)(06fbj4ukrlo+n7k&q5+$1md7i+mge=ee
             - name: PAPERLESS_PORT
               value: "8000"
             - name: PAPERLESS_URL
