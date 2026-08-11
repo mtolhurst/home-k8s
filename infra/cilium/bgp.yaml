@@ -5,7 +5,8 @@ metadata:
   namespace: kube-system
 spec:
   blocks:
-    - cidr: "10.2.16.0/24"
+    - start: "10.2.16.1"
+      stop: "10.2.16.254"
 
 ---
 apiVersion: cilium.io/v2
