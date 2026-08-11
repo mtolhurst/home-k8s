@@ -83,7 +83,6 @@ spec:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
-              cpu: 500m # Intentionally trying to throttle this
           image: ghcr.io/haveagitgat/tdarr:2.83.01
           ports:
             - name: http
