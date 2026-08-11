@@ -25,6 +25,8 @@ spec:
       targetRevision: 1.20.0
       helm:
         valuesObject:
+          bandwidthManager:
+            enabled: true
           routingMode: native
           ipv4NativeRoutingCIDR: "10.244.0.0/16"
           autoDirectNodeRoutes: true
