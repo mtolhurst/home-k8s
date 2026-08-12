@@ -1,5 +1,4 @@
 ---
-# Create a postgres 15 db with pgvector extension
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -11,7 +10,7 @@ spec:
     parameters:
       barmanObjectName: versity-store
   instances: 1
-  imageName: ghcr.io/mtolhurst/postgresql:15.3-pgvector@sha256:e9c502da08471b5cf1e48290c8624fdc8cee50a9aa370f83f5d357a2470ad00f
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
   storage:
     size: 5Gi
   bootstrap:
