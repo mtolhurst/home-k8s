@@ -110,4 +110,4 @@ spec:
             type: PathPrefix
             value: /
       timeouts:
-        request: "30s"
+        request: "60s"
