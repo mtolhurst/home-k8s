@@ -29,6 +29,9 @@ spec:
       app: nzbget
   template:
     metadata:
+      annotations:
+        kubernetes.io/ingress-bandwidth: "100M"
+        kubernetes.io/egress-bandwidth: "5M"
       labels:
         app: nzbget
     spec:
