@@ -30,7 +30,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubernetes.io/egress-bandwidth: "10M"
+        kubernetes.io/egress-bandwidth: "50M"
       labels:
         app: radarr
     spec:
