@@ -12,6 +12,42 @@ spec:
     requests:
       storage: 1Gi
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: camera-nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: manual
+  mountOptions:
+    - nfsvers=4.2
+    - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
+    - rsize=1048576 # Matches read requests to the ZFS block layout
+    - hard          # Prevents silent data corruption inside the pod if I/O pauses
+    - noresvport    # Ensures stable reconnects over Cilium's host networking
+  nfs:
+    server: nas.kube.home
+    path: /mnt/nas/cameras
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: camera-nfs
+  namespace: frigate
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: camera-nfs-pv # Manually binds to the exact PV above
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 1Gi
+---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -41,9 +77,8 @@ spec:
           emptyDir:
             medium: Memory
         - name: media
-          nfs:
-            server: nas.kube.home
-            path: /mnt/nas/cameras
+          persistentVolumeClaim:
+            claimName: camera-nfs
         - name: dshm
           emptyDir:
             medium: Memory
