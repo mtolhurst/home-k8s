@@ -29,8 +29,6 @@ spec:
       app: sonarr
   template:
     metadata:
-      annotations:
-        kubernetes.io/egress-bandwidth: "200M"
       labels:
         app: sonarr
     spec:
