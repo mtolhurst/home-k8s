@@ -23,8 +23,8 @@ spec:
   persistentVolumeReclaimPolicy: Retain 
   storageClassName: manual
   mountOptions:
-    - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
-    - rsize=1048576 # Matches read requests to the ZFS block layout
+    - wsize=65536 
+    - rsize=65536 
   nfs:
     server: nas.kube.home
     path: /mnt/nas/media
