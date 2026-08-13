@@ -28,9 +28,9 @@ spec:
     matchLabels:
       app: sonarr
   template:
-    annotations:
-      kubernetes.io/egress-bandwidth: "10M"
     metadata:
+      annotations:
+        kubernetes.io/egress-bandwidth: "10M"
       labels:
         app: sonarr
     spec:
