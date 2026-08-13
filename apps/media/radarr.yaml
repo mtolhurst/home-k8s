@@ -28,6 +28,8 @@ spec:
     matchLabels:
       app: radarr
   template:
+    annotations:
+      kubernetes.io/egress-bandwidth: "10M"
     metadata:
       labels:
         app: radarr

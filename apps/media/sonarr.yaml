@@ -28,6 +28,8 @@ spec:
     matchLabels:
       app: sonarr
   template:
+    annotations:
+      kubernetes.io/egress-bandwidth: "10M"
     metadata:
       labels:
         app: sonarr
