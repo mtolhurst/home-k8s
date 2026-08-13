@@ -25,6 +25,7 @@ spec:
   mountOptions:
     - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
     - rsize=1048576 # Matches read requests to the ZFS block layout
+    - noresvport
   nfs:
     server: nas.kube.home
     path: /mnt/nas/media
