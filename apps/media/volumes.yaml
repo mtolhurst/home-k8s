@@ -23,7 +23,6 @@ spec:
   persistentVolumeReclaimPolicy: Retain 
   storageClassName: manual
   mountOptions:
-    - nfsvers=4.2
     - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
     - rsize=1048576 # Matches read requests to the ZFS block layout
   nfs:
