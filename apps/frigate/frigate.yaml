@@ -25,12 +25,12 @@ spec:
   persistentVolumeReclaimPolicy: Retain 
   storageClassName: manual
   mountOptions:
-    - nfsvers=4.2
+    - nfsvers=4.1    # Required to guarantee nconnect stability
+    - nconnect=8     # Opens 8 parallel TCP sockets to TrueNAS for writes
     - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
     - rsize=1048576 # Matches read requests to the ZFS block layout
     - hard          # Prevents silent data corruption inside the pod if I/O pauses
     - noresvport    # Ensures stable reconnects over Cilium's host networking
-    - nolock
   nfs:
     server: nas.kube.home
     path: /mnt/nas/cameras
