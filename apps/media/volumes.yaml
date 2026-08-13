@@ -9,3 +9,40 @@ spec:
   resources:
     requests:
       storage: 60Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: manual
+  mountOptions:
+    - nfsvers=4.2
+    - wsize=1048576 # Forces Talos to chunk writes into exactly 1MB blocks
+    - rsize=1048576 # Matches read requests to the ZFS block layout
+    - hard          # Prevents silent data corruption inside the pod if I/O pauses
+    - noresvport    # Ensures stable reconnects over Cilium's host networking
+  nfs:
+    server: nas.kube.home
+    path: /mnt/nas/media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-nfs
+  namespace: multimedia 
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: media-nfs-pv # Manually binds to the exact PV above
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 1Gi
+---

@@ -69,10 +69,8 @@ spec:
           persistentVolumeClaim:
             claimName: tdarr-data-pvc
         - name: media
-          nfs:
-            server: nas.kube.home
-            path: /mnt/nas/media
-            readonly: false
+          persistentVolumeClaim:
+            claimName:  media-nfs
         - name: tmp
           persistentVolumeClaim:
             claimName: tdarr-cache-pvc
@@ -179,10 +177,8 @@ spec:
           persistentVolumeClaim:
             claimName: tdarr-data-pvc
         - name: media
-          nfs:
-            server: nas.kube.home
-            path: /mnt/nas/media
-            readonly: false
+          persistentVolumeClaim:
+            claimName:  media-nfs
         - name: tmp
           persistentVolumeClaim:
             claimName: tdarr-cache-pvc
@@ -281,10 +277,8 @@ spec:
           persistentVolumeClaim:
             claimName: tdarr-data-pvc
         - name: media
-          nfs:
-            server: nas.kube.home
-            path: /mnt/nas/media
-            readonly: false
+          persistentVolumeClaim:
+            claimName:  media-nfs
         - name: tmp
           persistentVolumeClaim:
             claimName: tdarr-cache-pvc

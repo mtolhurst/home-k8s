@@ -37,10 +37,8 @@ spec:
           persistentVolumeClaim:
             claimName: radarr-pvc
         - name: media
-          nfs:
-            server: nas.kube.home
-            path: /mnt/nas/media
-            readonly: false
+          persistentVolumeClaim:
+            claimName:  media-nfs
         - name: tmp
           persistentVolumeClaim:
             claimName: media-tmp-pvc
