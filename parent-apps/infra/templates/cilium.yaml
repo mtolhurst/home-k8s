@@ -25,6 +25,7 @@ spec:
       targetRevision: 1.20.0
       helm:
         valuesObject:
+          mtu: 9000
           bandwidthManager:
             enabled: true
           routingMode: native
