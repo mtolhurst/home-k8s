@@ -13,11 +13,6 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17
   storage:
     size: 5Gi
-  bootstrap:
-    initdb:
-      postInitApplicationSQL:
-        - CREATE EXTENSION IF NOT EXISTS vector
-        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
   # # Uncomment this, and comment out the spec.plugins block to restore from backup
     # recovery:
     #   source: vaultwarden-pg-cluster
