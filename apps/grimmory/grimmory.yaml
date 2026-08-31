@@ -36,6 +36,8 @@ metadata:
   labels:
     app: grimmory
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -120,7 +122,7 @@ spec:
               value: "admin"
             - name: MYSQL_DATABASE
               value: grimmory
-            - name: MYSQL_USERNAME
+            - name: MYSQL_USER
               value: admin
             - name: MYSQL_PASSWORD
               value: admin
