@@ -57,7 +57,7 @@ spec:
             server: nas.kube.home
             path: /mnt/nas/media/Books/library
             readonly: false
-        - name: drop_folder
+        - name: dropFolder
           nfs:
             server: nas.kube.home
             path: /mnt/nas/media/Books/drop_folder
@@ -84,7 +84,7 @@ spec:
               mountPath: /app/data
             - name: books
               mountPath: /books
-            - name: drop_folder
+            - name: dropFolder
               path: /bookdrop
           env: 
             - name: USER_ID
