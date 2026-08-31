@@ -1,0 +1,182 @@
+---
+# PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grimmory-pvc
+  labels:
+    backup: daily
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+---
+# PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grimmory-db-pvc
+  labels:
+    backup: daily
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grimmory
+  namespace: grimmory
+  labels:
+    app: grimmory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grimmory
+  template:
+    metadata:
+      labels:
+        app: grimmory
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: grimmory-pvc
+        - name: db
+          persistentVolumeClaim:
+            claimName: grimmory-db-pvc
+        - name: books
+          nfs:
+            server: nas.kube.home
+            path: /mnt/nas/media/Books/library
+            readonly: false
+        - name: drop_folder
+          nfs:
+            server: nas.kube.home
+            path: /mnt/nas/media/Books/drop_folder
+            readonly: false
+      containers:
+        - name: grimmory
+          image: grimmory/grimmory:v3.3.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 6060
+              protocol: TCP
+          livenessProbe: &serverProbe
+            httpGet: 
+              port: "http"
+              path: "api/v1/healthcheck"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 5
+          readinessProbe: *serverProbe
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: books
+              mountPath: /books
+            - name: drop_folder
+              path: /bookdrop
+          env: 
+            - name: USER_ID
+              value: "1000"
+            - name: GROUP_ID
+              value: "1000"
+            - name: DATABASE_URL
+              value: "jdbc:mariadb://mariadb:3306/grimmory"
+            - name: DATABASE_USERNAME
+              value: admin
+            - name: DATABASE_PASSWORD
+              value: admin
+            - name: TZ
+              value: Australia/Sydney
+            - name: DISK_TYPE
+              value: NETWORK
+        - name: mariadb
+          image: lscr.io/linuxserver/mariadb:11.4.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - name: db
+              mountPath: /config
+          env: 
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: MYSQL_ROOT_PASSWORD
+              value: "admin"
+            - name: MYSQL_DATABASE
+              value: grimmory
+            - name: MYSQL_USERNAME
+              value: admin
+            - name: MYSQL_PASSWORD
+              value: admin
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grimmory
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: grimmory
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: grimmory-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: grimmory.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: grimmory-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: grimmory-gateway
+  hostnames:
+    - grimmory.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: grimmory
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
