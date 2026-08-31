@@ -76,10 +76,10 @@ spec:
             httpGet: 
               port: "http"
               path: "api/v1/healthcheck"
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 1
-            failureThreshold: 5
+            failureThreshold: 20
           readinessProbe: *serverProbe
           volumeMounts:
             - name: data
