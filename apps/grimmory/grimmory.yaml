@@ -85,7 +85,7 @@ spec:
             - name: books
               mountPath: /books
             - name: drop-folder
-              path: /bookdrop
+              mountPath: /bookdrop
           env: 
             - name: USER_ID
               value: "1000"
