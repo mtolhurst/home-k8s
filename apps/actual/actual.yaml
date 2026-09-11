@@ -30,7 +30,7 @@ spec:
         app: actual
     spec:
       containers:
-      - image: docker.io/actualbudget/actual-server:sha-4820331-alpine
+      - image: docker.io/actualbudget/actual-server:sha-9956704-alpine
         name: actual
         env:
           - name: ACTUAL_PORT
