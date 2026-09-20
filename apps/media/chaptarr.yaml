@@ -1,0 +1,123 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chaptarr-pvc
+  labels:
+    backup: daily
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaptarr
+  namespace: multimedia
+  labels:
+    app: chaptarr
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chaptarr
+  template:
+    metadata:
+      labels:
+        app: chaptarr
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: chaptarr-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName:  media-nfs
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: media-tmp-pvc
+      containers:
+        - name: chaptarr
+          image: chaptarr/chaptarr:v0.9.958
+          ports:
+            - name: chaptarr-http
+              containerPort: 8789
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Australia/Sydney
+          volumeMounts:
+            - name: data
+              mountPath: /config
+            - name: media
+              mountPath: /ebooks
+              subPath: /Books/library
+            - name: tmp
+              mountPath: /downloads
+              subPath: complete
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaptarr
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: chaptarr-http
+      name: chaptarr-http
+  selector:
+    app: chaptarr
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: chaptarr-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: chaptarr.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: chaptarr-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend-chaptarr
+spec:
+  parentRefs:
+    - name: chaptarr-gateway
+  hostnames:
+    - chaptarr.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: chaptarr
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+      timeouts:
+        request: "60s"
