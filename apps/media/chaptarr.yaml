@@ -62,7 +62,7 @@ spec:
               mountPath: /ebooks
               subPath: Books/library
             - name: tmp
-              mountPath: /downloads
+              mountPath: /complete
               subPath: complete
 ---
 # Service
