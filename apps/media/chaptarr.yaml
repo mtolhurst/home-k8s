@@ -60,7 +60,7 @@ spec:
               mountPath: /config
             - name: media
               mountPath: /ebooks
-              subPath: /Books/library
+              subPath: Books/library
             - name: tmp
               mountPath: /downloads
               subPath: complete
