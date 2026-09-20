@@ -44,7 +44,7 @@ spec:
             claimName: media-tmp-pvc
       containers:
         - name: chaptarr
-          image: chaptarr/chaptarr:v0.9.958
+          image: chaptarr/chaptarr:0.9.958
           ports:
             - name: chaptarr-http
               containerPort: 8789
