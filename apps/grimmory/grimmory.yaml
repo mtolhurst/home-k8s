@@ -101,8 +101,6 @@ spec:
               value: admin
             - name: TZ
               value: Australia/Sydney
-            - name: DISK_TYPE
-              value: NETWORK
         - name: mariadb
           image: lscr.io/linuxserver/mariadb:11.8.8
           imagePullPolicy: IfNotPresent
