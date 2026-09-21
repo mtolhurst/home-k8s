@@ -1,5 +1,4 @@
 ---
-# Create a postgres 15 db with pgvector extension
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -14,6 +13,16 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:18
   storage:
     size: 2Gi
+  postgresql:
+    extensions:
+    - name: pgvector
+      image:
+        reference: ghcr.io/cloudnative-pg/pgvector:0.8.6-18-trixie
+  bootstrap:
+    initdb:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector
+  
   # # Uncomment this, and comment out the spec.plugins block to restore from backup
     # recovery:
     #   source: bookorbit-pg-cluster
@@ -24,6 +33,20 @@ spec:
   #     parameters:
   #       barmanObjectName: versity-store
   #       serverName: bookorbit-pg-cluster
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: 
+spec:
+  name: app
+  owner: app
+  cluster:
+    name: cluster-pgvector
+  extensions:
+  - name: vector
+    # renovate: suite=trixie-pgdg depName=postgresql-18-pgvector extractVersion=^(?<version>\d+\.\d+\.\d+)
+    version: '0.8.6'
 ---
 apiVersion: v1
 kind: Secret
