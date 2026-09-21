@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grimmory
+  name: bookorbit
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io 
@@ -9,7 +9,7 @@ spec:
   syncPolicy:
     managedNamespaceMetadata:
       labels:
-        kubernetes.io/metadata.name: grimmory
+        kubernetes.io/metadata.name: bookorbit
     syncOptions:
       - CreateNamespace=true
     automated: 
@@ -17,9 +17,9 @@ spec:
       selfHeal: true
       allowEmpty: false 
   destination:
-    namespace: grimmory
+    namespace: bookorbit
     server: {{ .Values.spec.destination.server }}
   project: default
   sources:
     - repoURL: {{ .Values.spec.source.repoURL }}
-      path: apps/grimmory
+      path: apps/bookorbit
