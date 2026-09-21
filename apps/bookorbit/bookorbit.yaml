@@ -1,0 +1,147 @@
+---
+# PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bookorbit-pvc
+  labels:
+    backup: daily
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookorbit
+  namespace: bookorbit
+  labels:
+    app: bookorbit
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookorbit
+  template:
+    metadata:
+      labels:
+        app: bookorbit
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: bookorbit-pvc
+        - name: books
+          nfs:
+            server: nas.kube.home
+            path: /mnt/nas/media/Books/library
+            readonly: false
+      containers:
+        - name: bookorbit
+          image: ghcr.io/bookorbit/bookorbit:3.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: books
+              mountPath: /books
+          env: 
+            - name: APP_URL
+              value: https://bookorbit.k8s.tolly-home.com
+            - name: JWT_SECRET
+              value: "a really long secure secret no one could ever guess"
+            - name: NODE_ENV
+              value: production
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-pg-cluster-app
+                  key: hostname
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-pg-cluster-app
+                  key: port
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-pg-cluster-app
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-pg-cluster-app
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-pg-cluster-app
+                  key: dbname
+            - name: SETUP_BOOTSTRAP_TOKEN
+              value: "a different really long secure secret that no one could possibly guess"
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookorbit
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: bookorbit
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: bookorbit-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: bookorbit.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: bookorbit-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: bookorbit-gateway
+  hostnames:
+    - bookorbit.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: bookorbit
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
