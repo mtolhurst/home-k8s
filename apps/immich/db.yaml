@@ -14,15 +14,11 @@ spec:
   imageName: ghcr.io/mtolhurst/postgresql:15.3-pgvector@sha256:e9c502da08471b5cf1e48290c8624fdc8cee50a9aa370f83f5d357a2470ad00f
   storage:
     size: 2Gi
-  postgresql:
-    extensions:
-    - name: pgvector
-      image:
-        reference: ghcr.io/cloudnative-pg/pgvector:0.8.6-18-trixie
   bootstrap:
     initdb:
       postInitApplicationSQL:
         - CREATE EXTENSION IF NOT EXISTS vector
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE
   # # Uncomment this, and comment out the spec.plugins block to restore from backup
     # recovery:
     #   source: immich-pg-cluster
