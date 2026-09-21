@@ -87,7 +87,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: backend
+  name: kosync-backend
 spec:
   parentRefs:
     - name: koreader-sync-gateway
