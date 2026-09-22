@@ -57,7 +57,7 @@ data:
             icon: mealie
             href: https://mealie.k8s.tolly-home.com
             description: Recipes 
-        - Paperless-ngx
+        - Paperless-ngx:
             icon: paperless
             href: https://docs.k8s.tolly-home.com
             description: Document storage/search
