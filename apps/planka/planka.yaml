@@ -12,18 +12,6 @@ spec:
     requests:
       storage: 1Gi
 ---
-# Create a postgres db
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: planka-pg-cluster
-spec:
-  instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:16
-  storage:
-    size: 1Gi
-
----
 # Deployment
 apiVersion: apps/v1
 kind: Deployment

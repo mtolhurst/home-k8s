@@ -1,0 +1,67 @@
+# Create a postgres db
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: planka-pg-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  storage:
+    size: 1Gi
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: versity-store
+  # # Uncomment this, and comment out the spec.plugins block to restore from backup
+    # recovery:
+    #   source: planka-pg-cluster
+  # externalClusters:
+  # - name: planka-pg-cluster
+  #   plugin:
+  #     name: barman-cloud.cloudnative-pg.io
+  #     parameters:
+  #       barmanObjectName: versity-store
+  #       serverName: planka-pg-cluster
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: versity-secret
+  namespace: planka
+type: Opaque
+data:
+  AWS_ACCESS_KEY_ID: YWRtaW4=
+  AWS_SECRET_ACCESS_KEY: YWRtaW4= 
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: versity-store
+spec:
+  configuration:
+    destinationPath: s3://cnpg-backups/planka/
+    endpointURL: http://s3-gw.versitygw.svc.cluster.local
+    s3Credentials:
+      accessKeyId:
+        name: versity-secret
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: versity-secret
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: daily-backup
+spec:
+  schedule: "0 0 0 * * *"  # At midnight every day
+  immediate: true
+  backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  cluster:
+    name: planka-pg-cluster
