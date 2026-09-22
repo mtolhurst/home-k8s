@@ -53,7 +53,7 @@ data:
             icon: vaultwarden
             href: https://vault.k8s.tolly-home.com
             description: Passwords
-        - Mealie
+        - Mealie:
             icon: mealie
             href: https://mealie.k8s.tolly-home.com
             description: Recipes 
@@ -61,9 +61,6 @@ data:
             icon: paperless
             href: https://docs.k8s.tolly-home.com
             description: Document storage/search
-
-
-    
             
   bookmarks.yaml: |
     []
