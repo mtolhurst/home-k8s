@@ -33,7 +33,11 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config-volume
-              mountPath: /app/config
+              mountPath: /app/config/settings.yaml
+              subPath: settings.yaml
+            - name: config-volume
+              mountPath: /app/config/services.yaml
+              subPath: services.yaml
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: home.k8s.tolly-home.com
