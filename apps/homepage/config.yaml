@@ -26,6 +26,14 @@ data:
             icon: sonarr
             href: https://sonarr.k8s.tolly-home.com
             description: TV series
+        - Prowlarr:
+            icon: prowlarr
+            href: https://prowlarr.k8s.tolly-home.com
+            description: Usenet indexer management
+        - NzbGet:
+            icon: nzbget
+            href: https://nzbget.k8s.tolly-home.com
+            description: Download client
     - Books:
         - Sonarr:
             icon: bookorbit
@@ -60,7 +68,30 @@ data:
         - Paperless-ngx:
             icon: paperless
             href: https://docs.k8s.tolly-home.com
-            description: Document storage/search
+            description: Documents
+        - LubeLogger:
+            icon: lubelogger
+            href: https://lubelogger.k8s.tolly-home.com
+            description: Car servicing
+        - Planka
+            icon: planka
+            href: https://planka.k8s.tolly-home.com
+            description: Kanban board
+    - Infrastructure:
+        - TrueNAS:
+            icon: truenas
+            href: http://nas.home
+            description: Storage
+        - ArgoCD:
+            icon: argocd
+            href: http://10.2.16.1
+            description: GitOps deployments
+        - Longhorn:
+            icon: longhorn
+            href: http://10.2.16.2
+            description: Distributed storage
+
+            
             
   bookmarks.yaml: |
     []
