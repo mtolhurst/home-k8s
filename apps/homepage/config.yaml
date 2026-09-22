@@ -73,7 +73,7 @@ data:
             icon: lubelogger
             href: https://lubelogger.k8s.tolly-home.com
             description: Car servicing
-        - Planka
+        - Planka:
             icon: planka
             href: https://planka.k8s.tolly-home.com
             description: Kanban board
