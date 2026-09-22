@@ -31,4 +31,9 @@ data:
             icon: bookorbit
             href: https://bookorbit.k8s.tolly-home.com
             description: Library
+        - Chaptarr:
+            icon: readarr
+            href: https://chaptarr.k8s.tolly-home.com
+            description: Book downloads
+            
 
