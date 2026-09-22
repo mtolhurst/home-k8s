@@ -1,0 +1,95 @@
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homepage
+  namespace: homepage
+  labels:
+    app: homepage
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homepage
+  template:
+    metadata:
+      labels:
+        app: homepage
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: homepage-config
+      containers:
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:v2.4.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: home.k8s.tolly-home.com
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: homepage
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: homepage
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: dns-issuer
+  name: homepage-gateway
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: home.k8s.tolly-home.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: homepage-https
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: backend
+spec:
+  parentRefs:
+    - name: homepage-gateway
+  hostnames:
+    - home.k8s.tolly-home.com
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: homepage
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+
