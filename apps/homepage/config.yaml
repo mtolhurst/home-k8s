@@ -32,8 +32,39 @@ data:
             href: https://bookorbit.k8s.tolly-home.com
             description: Library
         - Chaptarr:
-            icon: readarr
+            icon: chaptarr
             href: https://chaptarr.k8s.tolly-home.com
             description: Book downloads
+    - Home automation:
+        - "Home assistant":
+            icon: home-assistant
+            href: https://ha.k8s.tolly-home.com
+            description: Home assistant
+        - Frigate:
+            icon: frigate
+            href: http://frigate.home
+            description: Cameras
+    - Tools:
+        - Immich:
+            icon: immich
+            href: https://immich.k8s.tolly-home.com
+            description: Photos
+        - Vaultwarden:
+            icon: vaultwarden
+            href: https://vault.k8s.tolly-home.com
+            description: Passwords
+        - Mealie
+            icon: mealie
+            href: https://mealie.k8s.tolly-home.com
+            description: Recipes 
+        - Paperless-ngx
+            icon: paperless
+            href: https://docs.k8s.tolly-home.com
+            description: Document storage/search
+
+
+    
             
+  bookmarks.yaml: |
+    []
 
