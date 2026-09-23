@@ -37,6 +37,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: bookorbit-pvc
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: media-tmp-pvc
         - name: books
           nfs:
             server: nas.kube.home
@@ -55,6 +58,9 @@ spec:
               mountPath: /app/data
             - name: books
               mountPath: /books
+            - name: tmp
+              mountPath: /complete
+              subPath: complete
           env: 
             - name: APP_URL
               value: https://bookorbit.k8s.tolly-home.com
