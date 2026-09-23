@@ -37,8 +37,8 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: versity-secret
-  namespace: bookorbit
+  name: versity-secret-bookorbit
+  namespace: multimedia
 type: Opaque
 data:
   AWS_ACCESS_KEY_ID: YWRtaW4=
@@ -54,10 +54,10 @@ spec:
     endpointURL: http://s3-gw.versitygw.svc.cluster.local
     s3Credentials:
       accessKeyId:
-        name: versity-secret
+        name: versity-secret-bookorbit
         key: AWS_ACCESS_KEY_ID
       secretAccessKey:
-        name: versity-secret
+        name: versity-secret-bookorbit
         key: AWS_SECRET_ACCESS_KEY
     wal:
       compression: gzip
