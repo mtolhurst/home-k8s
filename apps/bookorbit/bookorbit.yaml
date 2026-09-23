@@ -60,6 +60,8 @@ spec:
               value: https://bookorbit.k8s.tolly-home.com
             - name: JWT_SECRET
               value: "a really long secure secret no one could ever guess"
+            - name: BOOK_REQUEST_ENCRYPTION_KEY
+              value: aae9ca52aa67b48a7339e145a2ac2bc1ba26c6eaab25209bb927c7bbd70737f2
             - name: NODE_ENV
               value: production
             - name: POSTGRES_HOST
