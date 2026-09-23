@@ -14,6 +14,10 @@ data:
             icon: jellyfin
             href: http://nas.home:30013
             description: Media server
+        - Bookorbit:
+            icon: bookorbit
+            href: https://bookorbit.k8s.tolly-home.com
+            description: Books & Audiobooks
         - Jellyfin (alt):
             icon: jellyfin
             href: http://192.168.2.200:30013
@@ -34,15 +38,6 @@ data:
             icon: nzbget
             href: https://nzbget.k8s.tolly-home.com
             description: Download client
-    - Books:
-        - Sonarr:
-            icon: bookorbit
-            href: https://bookorbit.k8s.tolly-home.com
-            description: Library
-        - Chaptarr:
-            icon: chaptarr
-            href: https://chaptarr.k8s.tolly-home.com
-            description: Book downloads
     - Home automation:
         - "Home assistant":
             icon: home-assistant
