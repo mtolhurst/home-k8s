@@ -189,7 +189,7 @@ spec:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
             limits:
               gpu.intel.com/i915: 1 # ensuring this is scheduled on a node with GPU
-          image: ghcr.io/haveagitgat/tdarr_node:2.87.01
+          image: ghcr.io/haveagitgat/tdarr_node:2.89.01
           env:
             - name: TZ
               value: Australia/Sydney
