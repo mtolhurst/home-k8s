@@ -43,6 +43,10 @@ data:
             icon: home-assistant
             href: https://ha.k8s.tolly-home.com
             description: Home assistant
+        - Zigbee2MQTT:
+            icon: zigbee2mqtt
+            href: http://nas.home:30065/#/
+            description: Zigbee2MQTT
         - Frigate:
             icon: frigate
             href: http://frigate.home
