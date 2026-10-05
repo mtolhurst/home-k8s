@@ -5,7 +5,7 @@ metadata:
   namespace: home-assistant
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: longhorn-local-cache 
   resources:
     requests:
@@ -20,6 +20,8 @@ metadata:
     app: ollama-ha
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ollama-ha
