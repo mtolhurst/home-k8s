@@ -26,7 +26,7 @@ parameters:
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: longhorn-no-replica
+  name: longhorn-local-cache
 provisioner: driver.longhorn.io
 allowVolumeExpansion: true
 reclaimPolicy: Delete
