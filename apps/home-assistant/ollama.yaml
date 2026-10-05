@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-ha-storage
+  namespace: home-assistant
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn-local-cache 
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-ha
+  namespace: home-assistant
+  labels:
+    app: ollama-ha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama-ha
+  template:
+    metadata:
+      labels:
+        app: ollama-ha
+    spec:
+      nodeSelector:
+        hardware-tier: high 
+      initContainers:
+      - name: model-downloader
+        image: ollama/ollama:0.35.1
+        command:
+        - sh
+        - -c
+        - |
+          # Start a temporary background instance of ollama
+          ollama serve &
+          
+          # Wait for it to become responsive
+          until ollama list >/dev/null 2>&1; do
+            echo "Waiting for local ollama service to start..."
+            sleep 2
+          done
+          
+          # Pull the model if it's missing (ollama pull skips automatically if already present)
+          echo "Ensuring qwen2.5:7b-instruct is downloaded..."
+          ollama pull qwen2.5:7b-instruct
+          
+          echo "Model verification complete!"
+        volumeMounts:
+        - name: model-volume
+          mountPath: /root/.ollama
+      containers:
+      - name: ollama
+        image: ollama/ollama:0.35.1
+        ports:
+        - containerPort: 11434
+          name: api
+        env:
+        - name: OLLAMA_KEEP_ALIVE
+          value: "-1" 
+        resources:
+          requests:
+            cpu: "4"
+            memory: 6Gi
+            gpu.intel.com/i915: 1
+          limits:
+            cpu: "8"
+            memory: 12Gi
+            gpu.intel.com/i915: 1
+        volumeMounts:
+        - name: model-volume
+          mountPath: /root/.ollama
+      volumes:
+      - name: model-volume
+        persistentVolumeClaim:
+          claimName: ollama-ha-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-ha
+  namespace: home-assistant
+spec:
+  ports:
+  - port: 11434
+    targetPort: 11434
+    name: http
+  selector:
+    app: ollama-ha
+

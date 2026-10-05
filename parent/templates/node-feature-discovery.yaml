@@ -25,5 +25,12 @@ spec:
     - chart: node-feature-discovery
       repoURL: https://kubernetes-sigs.github.io/node-feature-discovery/charts
       targetRevision: 0.18.3
+      helm:
+        valuesObject:
+          worker:
+            tolerations:
+              - key: "dedicated"
+                operator: "Equal"
+                value: "gpu"
     - repoURL: {{ .Values.spec.source.repoURL }}
       path: infra/node-feature-discovery
