@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: piper-model-cache
+  namespace: home-assistant
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # This is just a cache of models, no need to back up
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: piper-tts
+  namespace: home-assistant
+  labels:
+    app: piper-tts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: piper-tts
+  template:
+    metadata:
+      labels:
+        app: piper-tts
+    spec:
+      containers:
+        - name: piper
+          image: lscr.io/linuxserver/piper:2.5.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 10200
+              name: wyoming
+          env:
+            - name: TZ
+              value: "Australia/Sydney"
+            # Set your default voice. Piper will automatically download it on startup if missing.
+            - name: PIPER_VOICE
+              value: "en_US-lessac-medium" 
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "2000m" # Piper uses CPU threads effectively during synthesis
+              memory: "1Gi"
+          volumeMounts:
+            # Binds to the local cache so voices aren't redownloaded when pods restart
+            - mountPath: /config
+              name: piper-data
+      volumes:
+        - name: piper-data
+          persistentVolumeClaim:
+            claimName: piper-model-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: piper-tts
+  namespace: home-assistant
+spec:
+  type: ClusterIP
+  ports:
+    - port: 10200
+      targetPort: 10200
+      name: wyoming
+  selector:
+    app: piper-tts
+
