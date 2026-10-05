@@ -5,7 +5,7 @@ metadata:
   namespace: home-assistant
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi  # This is just a cache of models, no need to back up
