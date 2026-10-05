@@ -39,7 +39,7 @@ spec:
               value: "Australia/Sydney"
             # Set your default voice. Piper will automatically download it on startup if missing.
             - name: PIPER_VOICE
-              value: "en_US-lessac-medium" 
+              value: "en_GB-vctk-medium" 
           resources:
             requests:
               cpu: "500m"
