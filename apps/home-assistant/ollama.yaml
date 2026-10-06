@@ -34,7 +34,7 @@ spec:
         hardware-tier: high 
       initContainers:
       - name: model-downloader
-        image: ollama/ollama:0.35.1
+        image: ollama/ollama:latest
         command:
         - sh
         - -c
@@ -48,14 +48,27 @@ spec:
             sleep 2
           done
           
-          # Pull the model if it's missing (ollama pull skips automatically if already present)
-          echo "Ensuring qwen2.5:3b-instruct is downloaded..."
-          ollama pull qwen2.5:3b-instruct
+          # 1. Pull the base GGUF model directly from Hugging Face via Ollama
+          echo "Ensuring acon96/Home-3B-v3-GGUF (Q4_K_M) is downloaded..."
+          ollama pull hf.co/acon96/Home-3B-v3-GGUF:Q4_K_M
+          
+          # 2. Dynamically write a Modelfile to apply iGPU performance limits
+          echo "Creating custom Modelfile for Home Assistant performance optimization..."
+          cat <<EOF > /tmp/Modelfile
+          FROM hf.co/acon96/Home-3B-v3-GGUF:Q4_K_M
+          PARAMETER num_ctx 2048
+          PARAMETER num_gpu 999
+          EOF
+          
+          # 3. Compile the custom model tag
+          echo "Building home-llm model..."
+          ollama create home-llm -f /tmp/Modelfile
           
           echo "Model verification complete!"
         volumeMounts:
         - name: model-volume
           mountPath: /root/.ollama
+
       containers:
       - name: ollama
         image: ollama/ollama:0.35.1
