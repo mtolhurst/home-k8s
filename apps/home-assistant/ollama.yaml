@@ -76,6 +76,10 @@ spec:
         - containerPort: 11434
           name: api
         env:
+        - name: ONEAPI_DEVICE_SELECTOR
+          value: "level_zero:0" # Bypasses standard opencl layers to run on the direct compute runtime
+        - name: OLLAMA_NUM_PARALLEL
+          value: "1"
         - name: OLLAMA_KEEP_ALIVE
           value: "-1" 
         - name: OLLAMA_IGPU_ENABLE
