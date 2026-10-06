@@ -49,8 +49,8 @@ spec:
           done
           
           # Pull the model if it's missing (ollama pull skips automatically if already present)
-          echo "Ensuring qwen2.5:7b-instruct is downloaded..."
-          ollama pull qwen2.5:7b-instruct
+          echo "Ensuring qwen2.5:3b-instruct is downloaded..."
+          ollama pull qwen2.5:3b-instruct
           
           echo "Model verification complete!"
         volumeMounts:
