@@ -82,8 +82,6 @@ spec:
           value: "1"
         - name: OLLAMA_FLASH_ATTENTION
           value: "1"
-        - name: OLLAMA_KV_CACHE_TYPE
-          value: "q4_0"
         resources:
           requests:
             cpu: "4"
