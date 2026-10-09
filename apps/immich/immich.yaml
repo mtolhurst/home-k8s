@@ -27,7 +27,7 @@ spec:
             readonly: false
         - name: cache
           emptyDir:
-            sizeLimit: 1Gi
+            sizeLimit: 5Gi
       containers:
         - name: redis
           image: redis:8.10-alpine
