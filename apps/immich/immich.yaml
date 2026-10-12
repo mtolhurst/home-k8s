@@ -110,8 +110,6 @@ spec:
             - name: data
               mountPath: /usr/src/app/upload
           env: 
-            - name: IMMICH_LOG_LEVEL
-              value: verbose
             - name: IMMICH_PORT
               value: "2283"
             - name: IMMICH_HOST
