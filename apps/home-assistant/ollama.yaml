@@ -71,7 +71,7 @@ spec:
 
       containers:
       - name: ollama
-        image: ollama/ollama:0.35.1
+        image: ollama/ollama:latest
         ports:
         - containerPort: 11434
           name: api
