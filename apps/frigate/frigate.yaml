@@ -90,7 +90,7 @@ spec:
             medium: Memory
       initContainers:
         - name: copyconfig
-          image: ghcr.io/blakeblackshear/frigate:0.18.0
+          image: ghcr.io/blakeblackshear/frigate:0.18.2
           volumeMounts:
             - mountPath: /config.yml
               subPath: config.yaml
@@ -109,7 +109,7 @@ spec:
             httpGet:
               path: /
               port: http
-          image: ghcr.io/blakeblackshear/frigate:0.18.0
+          image: ghcr.io/blakeblackshear/frigate:0.18.2
           securityContext:
             capabilities:
               add: ["PERFMON"]
