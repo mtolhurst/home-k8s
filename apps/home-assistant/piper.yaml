@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: piper
-          image: lscr.io/linuxserver/piper:2.5.2
+          image: lscr.io/linuxserver/piper:2.5.3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 10200
