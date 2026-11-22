@@ -72,6 +72,5 @@ A number of secrets are not stored here, and are required for all apps to work
 * Get all apps using externalDNS
   * Move everything we can behind envoy gateway with a cert
 * Docs (and figure out where to put them?)
-* n8n
 * Move ollama to separate app, out of ha (it's not suitable for realtime voice)
 
