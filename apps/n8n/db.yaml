@@ -3,7 +3,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: immich-pg-cluster
+  name: n8n-pg-cluster
 spec:
   plugins:
   - name: barman-cloud.cloudnative-pg.io
