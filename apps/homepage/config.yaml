@@ -51,6 +51,10 @@ data:
             icon: frigate
             href: http://frigate.home
             description: Cameras
+        - n8n:
+            icon: n8n
+            href: https://n8n.k8s.tolly-home.com
+            description: More automation
     - Tools:
         - Immich:
             icon: immich
@@ -89,6 +93,10 @@ data:
             icon: longhorn
             href: http://10.2.16.2
             description: Distributed storage
+        - Opnsense:
+            icon: opnsense
+            href: http://192.168.1.1
+            description: Router
 
             
             
