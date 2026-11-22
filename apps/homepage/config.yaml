@@ -51,10 +51,6 @@ data:
             icon: frigate
             href: http://frigate.home
             description: Cameras
-        - n8n:
-            icon: n8n
-            href: https://n8n.k8s.tolly-home.com
-            description: More automation
     - Tools:
         - Immich:
             icon: immich
