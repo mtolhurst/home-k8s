@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: whisper
-          image: rhasspy/wyoming-whisper:3.8.1
+          image: rhasspy/wyoming-whisper:3.9.1
           imagePullPolicy: IfNotPresent
           args:
             - "--model"
