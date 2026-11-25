@@ -38,7 +38,7 @@ spec:
             claimName: prowlarr-pvc
       containers:
         - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:3.0.2
+          image: lscr.io/linuxserver/prowlarr:3.1.0
           ports:
             - name: http
               containerPort: 9696
