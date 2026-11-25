@@ -48,7 +48,7 @@ spec:
         app: mosquitto
     spec:
       containers:
-      - image: eclipse-mosquitto:2.0.22
+      - image: eclipse-mosquitto:2.0.23
         name: mosquitto
         resources:
           requests:
